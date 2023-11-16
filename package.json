@@ -1,0 +1,22 @@
+{
+  "name": "automation_testing",
+  "version": "1.0.0",
+  "description": "My first REAL automation testing",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zarkeysonn/Lexplore.git"
+  },
+  "author": "Zarkic Narkic",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Zarkeysonn/Lexplore/issues"
+  },
+  "homepage": "https://github.com/Zarkeysonn/Lexplore#readme",
+  "devDependencies": {
+    "cypress": "^13.5.1"
+  }
+}
