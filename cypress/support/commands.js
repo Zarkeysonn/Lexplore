@@ -38,6 +38,20 @@ Cypress.Commands.add("loginFromBackend", () => {
   return cookie;
 });
 
+Cypress.Commands.add("loginFromBackendWithSession", () => {
+  let cookie;
+  cy.session(["cookie"], () => {
+    cy.intercept(`**/lastPerBook`) //ovako uvek da radimo sa interceptovima
+      //cy.intercept(Cypress.env('interceptUrl'))
+      .as("interceptLogin");
+    cy.visit("");
+    cy.wait("@interceptLogin").then((response) => {
+      cookie = response.request.headers.cookie;
+    });
+    return cookie;
+  });
+});
+
 Cypress.Commands.add(
   "addBookWithHardCodeData",
   ({
