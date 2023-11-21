@@ -1,0 +1,14 @@
+{
+    "bookId": "",
+    "method": "POST",
+    "comment": "Some test comment",
+    "date": "",
+    "difficultWords": [""],
+    "endPage": 1,
+    "interestingWords": [""],
+    "minuteSpent": 5,
+    "numberOfPages": 1,
+    "readingCompanion": "none",
+    "readingSessionId" : "",
+    "startPage": 1
+}

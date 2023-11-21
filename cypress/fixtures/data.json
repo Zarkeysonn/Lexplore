@@ -1,0 +1,16 @@
+{
+    "method" : "PUT", 
+    "failOnStatusCode" : false, 
+    "authors" : ["Zarkic"],
+    "coverUrl" : "https://books.google.com/books/content?id=bIZiAAAAMAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+    "cookie" : "", 
+    "description" : "This book is totally fake.",
+    "format" : "paper",
+    "format_digital": "digital", 
+    "genres" : ["Fiction"], 
+    "isbn" : "", 
+    "numberOfPages" : 69, 
+    "publisher" : "Vulkan", 
+    "title" : "A Game of Thrones Da li radi ovo"
+}
+
