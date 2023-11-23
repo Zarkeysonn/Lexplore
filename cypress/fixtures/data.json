@@ -11,6 +11,19 @@
     "isbn" : "", 
     "numberOfPages" : 69, 
     "publisher" : "Vulkan", 
-    "title" : "A Game of Thrones Da li radi ovo"
+    "title" : "A Game of Thrones Da li radi ovo",
+
+    "errorMessage": {
+        "title": "Please search for a book and choose one in the list",
+        "type": "Please enter a book type",
+        "negativeNumPages": "Number of pages must be a positive number",
+        "highNum": "End page can't be higher than the total number of pages",
+        "invalidUrl": "Cover URL is invalid",
+        "readingType": "Please enter how you are reading this book",
+        "invalidIsbn": "ISBN is invalid",
+        "invalidPublisher": "Publisher name must be exact",
+        "invalidGenres": "Genres selection is invalid",
+        "invalidAuthors": "Authors must be an array of strings"
+      }
 }
 

@@ -40,9 +40,8 @@ Cypress.Commands.add("loginFromBackend", () => {
 
 Cypress.Commands.add("loginFromBackendWithSession", () => {
   let cookie;
-  cy.session(["cookie"], () => {
+  cy.session("cookie", () => {
     cy.intercept(`**/lastPerBook`) //ovako uvek da radimo sa interceptovima
-      //cy.intercept(Cypress.env('interceptUrl'))
       .as("interceptLogin");
     cy.visit("");
     cy.wait("@interceptLogin").then((response) => {
@@ -55,13 +54,13 @@ Cypress.Commands.add("loginFromBackendWithSession", () => {
 Cypress.Commands.add(
   "addBookWithHardCodeData",
   ({
-    method = "",
+    method,
     failOnStatusCode = false,
-    url = "",
-    authors = "",
+    url,
+    authors,
     //authors = data.authors,
-    coverUrl = "",
-    cookie = "",
+    coverUrl,
+    cookie,
     description = "Hard coded desc",
     format = "paper", //obavezan parametar izgleda...
     genres = ["Fiction"],
@@ -140,51 +139,6 @@ Cypress.Commands.add(
     }).then((response) => {
       console.log(response);
       expect(response.status).to.eql(statusCode);
-    });
-  }
-);
-
-Cypress.Commands.add(
-  "addInvalidBook",
-  ({
-    method = data.method,
-    failOnStatusCode = false,
-    url = data.url,
-    //authors = ['George R. R. Martin'],
-    authors = data.authors,
-    coverUrl = data.coverUrl,
-    cookie = "",
-    description = data.description,
-    format = data.format, //obavezan parametar izgleda...
-    //genres = ["Fiction"],
-    genres = data.genres,
-    isbn = data.isbn,
-    numberOfPages = data.numberOfPages,
-    publisher = data.publisher,
-    title = data.title,
-  }) => {
-    cy.request({
-      method: method,
-      failOnStatusCode: failOnStatusCode,
-      url: `${Cypress.env("apiOrigin")}/books`, //ovako
-      body: {
-        authors: authors,
-        //coverUrl: "https://books.google.com/books/content?id=bIZiAAAAMAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
-        coverUrl: coverUrl,
-        description: description, //"Fantasy-roman.",
-        format: format, //"paper",
-        genres: genres, //["Fiction"],
-        isbn: isbn, //"",
-        numberOfPages: numberOfPages, //876
-        publisher: publisher, //"Bantam",
-        title: title, //"A Game of Thrones",
-      },
-      headers: {
-        Cookie: `${cookie.name}=${cookie.value}`,
-      },
-    }).then((response) => {
-      console.log(response);
-      expect(response.status).to.eql(401);
     });
   }
 );

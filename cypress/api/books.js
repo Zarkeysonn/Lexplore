@@ -5,10 +5,10 @@ module.exports = {
   postBook({
     method = data.method,
     failOnStatusCode = false,
-    url = "",
+    url = `${Cypress.env("apiOrigin")}/books`, //ovako,
     authors = data.authors,
     coverUrl = "",
-    cookie = "",
+    //cookie = "",
     description = data.description,
     format = data.format, //obavezan parametar izgleda...
     genres = data.genres,
@@ -17,12 +17,13 @@ module.exports = {
     publisher = data.publisher,
     title = data.title,
     statusCode = 200,
+    errorMessage,
   }) {
     return cy
       .request({
-        method: method,
-        failOnStatusCode: false,
-        url: `${Cypress.env("apiOrigin")}/books`, //ovako
+        method,
+        failOnStatusCode,
+        url,
         body: {
           authors: authors,
           coverUrl: coverUrl,
@@ -35,18 +36,35 @@ module.exports = {
           title: title, //"A Game of Thrones",
         },
         headers: {
-          Cookie: cookie,
+          //Cookie: cookie,
         },
       })
       .then((response) => {
         expect(response.status).to.eql(statusCode);
+        if (statusCode === 200) {
+          console.log(response.body);
+          expect(response.body).to.have.property("bookId");
+          //return response.body;
+        }
+        if (statusCode !== 200 && statusCode !== 404) {
+          expect(`${response.body.errors[0].message.text}`).to.eql(
+            errorMessage
+          );
+        }
         return response.body;
       });
   },
 
+  // try {
+  //   const response = await fetch('http://localhost:3001/api/', options)
+  //   return await response.json()
+  // }catch(error){
+  //   console.error(error)
+  // }
+
   //user/readProgress
   postActivity({
-    cookie,
+    //cookie,
     bookId = activity.bookId,
     method = activity.method,
     comment = activity.comment,
@@ -81,7 +99,7 @@ module.exports = {
         },
       },
       headers: {
-        Cookie: cookie,
+        //Cookie: cookie,
       },
     }).then((response) => {
       console.log(response);
@@ -90,30 +108,27 @@ module.exports = {
   },
 
   getAllBooks() {
-    return cy.request({
+    return cy
+      .request({
         method: "GET",
         failOnStatusCode: false,
         url: `${Cypress.env("apiOrigin")}/books?libraryType=readingDiary`,
-    }).then((response) => {
-        console.log(response.body, 'Response body for get all boooks')
+      })
+      .then((response) => {
+        console.log(response.body, "Response body for get all boooks");
         return response.body;
-    })
+      });
   },
-  
-  deleteBook({
-    devSessionId = "",
-    bookId = ""
-    }) 
-        {
-            return cy.request({
-                method: "DELETE",
-                failOnStatusCode: false,
-                url: `https://readingservicesdev.lexplore.com/books/${bookId}`
-            })
-            .then((response) => {
-                expect(response.status).to.eq(200)
-            })
-        }
+
+  deleteBook({ bookId = "" }) {
+    return cy
+      .request({
+        method: "DELETE",
+        failOnStatusCode: false,
+        url: `https://readingservicesdev.lexplore.com/books/${bookId}`,
+      })
+      .then((response) => {
+        expect(response.status).to.eq(200);
+      });
+  },
 };
-
-
