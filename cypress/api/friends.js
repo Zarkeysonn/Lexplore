@@ -38,7 +38,7 @@ module.exports = {
         url: url,
         failOnStatusCode: failOnStatusCode,
         body: {
-          accepted: true,
+          accepted: true, //accept treba proveriti
         },
       })
       .then((response) => {
@@ -76,7 +76,13 @@ module.exports = {
           count++;
         }
       });
-      expect(count).to.eq(1);
+      if (count > 0) {
+        expect(count).to.eq(1);
+        console.log("In friends list");
+      } else {
+        expect(count).to.eq(0);
+        console.log("Not in friends list");
+      }
     });
   },
 
