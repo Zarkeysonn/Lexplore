@@ -1,3 +1,4 @@
+//import { forEach } from "cypress/types/lodash";
 import friendRequestAccept from "../fixtures/login.json";
 
 module.exports = {
@@ -45,14 +46,31 @@ module.exports = {
   }) {
     return cy
       .request({
-        method: method,
+        method,
         failOnStatusCode: failOnStatusCode,
         url: url,
       })
       .then((response) => {
-        console.log(response.body, "Response body for all friends list");
+        console.log(response, "Response body for all friends list");
         return response.body;
       });
+  },
+
+  //helper funkcija da li se nalazi u nizu neka vrednost koja ce vracati true
+  // cim naleti na vrednost koju smo zadali vraca true, ta funkcija da ima 2 parametra niz i koji parametar trazimo
+  // pozvati je u expectu izmedju zagrada
+  checkIfStudentIsFriend({ userId }) {
+    this.getAllFriends({}).then((friends) => {
+      let count = 0;
+      console.log(friends);
+      friends.forEach((friend) => {
+        console.log(friend, "MICA");
+        if (friend.userId == userId) {
+          count++;
+        }
+      });
+      expect(count).to.eq(1);
+    });
   },
 
   deleteFriend({ friendId = "" }) {
