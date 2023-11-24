@@ -4,8 +4,11 @@ import friendRequestAccept from "../fixtures/login.json";
 module.exports = {
   sendFriendRequest({
     method = "PUT",
-    url = `${Cypress.env("apiOrigin")}/friends/257923/friendRequest`,
+    userId = "",
+    // url = `${Cypress.env("apiOrigin")}/friends/257923/friendRequest`,
+    url = `${Cypress.env("apiOrigin")}/friends/${userId}/friendRequest`,
     failOnStatusCode = false,
+    statusCode = 200,
   }) {
     return cy
       .request({
@@ -14,21 +17,25 @@ module.exports = {
         failOnStatusCode: failOnStatusCode,
       })
       .then((response) => {
-        expect(response.status).to.eq(200);
+        expect(response.status).to.eq(statusCode);
       });
   },
 
+  // added requestSender param, don't forget to add it to func calls
   acceptFriendRequest({
     method = "POST",
-    url = `${Cypress.env("apiOrigin")}/friends/257919/friendRequest/accept`,
+    requestSender,
+    url = `${Cypress.env(
+      "apiOrigin"
+    )}/friends/${requestSender}/friendRequest/accept`,
     statusCode = 200,
     failOnStatusCode = false,
   }) {
     return cy
       .request({
         method: method,
+        requestSender: requestSender,
         url: url,
-        statusCode: statusCode,
         failOnStatusCode: failOnStatusCode,
         body: {
           accepted: true,
@@ -64,7 +71,7 @@ module.exports = {
       let count = 0;
       console.log(friends);
       friends.forEach((friend) => {
-        console.log(friend, "MICA");
+        console.log(friend, "MICA PITA");
         if (friend.userId == userId) {
           count++;
         }
@@ -73,7 +80,7 @@ module.exports = {
     });
   },
 
-  deleteFriend({ friendId = "" }) {
+  deleteFriend({ friendId = "", statusCode = 200 }) {
     return cy
       .request({
         method: "DELETE",
@@ -81,7 +88,7 @@ module.exports = {
         url: `${Cypress.env("apiOrigin")}/friends/${friendId}`,
       })
       .then((response) => {
-        expect(response.status).to.eq(200);
+        expect(response.status).to.eq(statusCode);
       });
   },
 };
