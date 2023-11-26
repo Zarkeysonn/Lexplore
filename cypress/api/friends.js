@@ -69,11 +69,20 @@ module.exports = {
   checkIfStudentIsFriend({ userId }) {
     this.getAllFriends({}).then((friends) => {
       let count = 0;
-      console.log(friends);
+      console.log(friends, "MICA OPET PITA");
       friends.forEach((friend) => {
         console.log(friend, "MICA PITA");
+
+        //zakomentario sam ovaj IF koji je inace dobar ali fali
+        //ta asertacija za isFriend atribut
+
+        // if (friend.userId == userId) {
+        //   count++;
+        // }
         if (friend.userId == userId) {
-          count++;
+          if (friend.isFriend == true) {
+            count++;
+          }
         }
       });
       if (count > 0) {
@@ -83,6 +92,17 @@ module.exports = {
         expect(count).to.eq(0);
         console.log("Not in friends list");
       }
+    });
+  },
+
+  studentIsFriend({ userId }) {
+    this.getAllFriends({}).then((friends) => {
+      friends.forEach((friend) => {
+        console.log(friends, "All friends new");
+        if (friend.isFriend == true) {
+          //nastaviti ako je dobro
+        }
+      });
     });
   },
 
