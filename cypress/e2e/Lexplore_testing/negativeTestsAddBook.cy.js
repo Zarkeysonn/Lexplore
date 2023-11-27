@@ -8,7 +8,7 @@ import errorMessage from "../../fixtures/data.json";
 
 describe("Negative tests for adding proccess", () => {
   beforeEach(() => {
-    login.auth();
+    login.authStudents(login.st);
   });
 
   context("Method parameter", () => {

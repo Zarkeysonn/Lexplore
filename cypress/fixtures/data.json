@@ -1,4 +1,7 @@
 {
+    "baseUrl": "https://logindev.lexplore.com",
+    "statusCode200": 200,
+    "statusCode404": 404,
     "method" : "PUT", 
     "failOnStatusCode" : false, 
     "authors" : ["Zarkic"],

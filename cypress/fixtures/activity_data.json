@@ -1,4 +1,4 @@
-{
+{"readingActivityData": {
     "bookId": "",
     "method": "POST",
     "comment": "Some test comment",
@@ -11,4 +11,4 @@
     "readingCompanion": "none",
     "readingSessionId" : "",
     "startPage": 1
-}
+}}
