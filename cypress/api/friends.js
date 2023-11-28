@@ -79,10 +79,10 @@ module.exports = {
         // if (friend.userId == userId) {
         //   count++;
         // }
-        if (friend.userId == userId) {
-          if (friend.isFriend == true) {
-            count++;
-          }
+        if (friend.userId == userId && friend.isFriend == true) {
+          //if (friend.isFriend == true) {
+          count++;
+          //}
         }
       });
       if (count > 0) {
@@ -95,6 +95,7 @@ module.exports = {
     });
   },
 
+  // ova funkcija mi je nepotrebna ne koristim je
   studentIsFriend({ userId }) {
     this.getAllFriends({}).then((friends) => {
       friends.forEach((friend) => {
