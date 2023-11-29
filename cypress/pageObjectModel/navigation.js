@@ -4,8 +4,7 @@ class Navigation {
   }
 
   get getMyReading() {
-    //return cy.get('data-cy="nav.my.books.tab"')
-    return cy.get('[data-cy="nav.my.books.tab"] > span');
+    return cy.get("a[href='/student/diary'][type='button']");
   }
 
   get getHomePageAddBook() {
@@ -27,6 +26,18 @@ class Navigation {
   toMyReadingPage() {
     this.clickHomeBtn(); //ovo je mozda i visak?
     this.clickMyReading();
+  }
+
+  navigateTo(option) {
+    switch (option) {
+      case myReading:
+        this.getMyReading
+          .click({ force: true })
+          .url()
+          .should("contain", "student/diary");
+      case homePage:
+        this.getHomeBtn.click().url().should("contain", "home");
+    }
   }
 }
 
