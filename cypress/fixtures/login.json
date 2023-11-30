@@ -4,5 +4,10 @@
     "student1": "https://logindev.lexplore.com/go/5yU3DaVNH0GmIjPBMJXWDg",
     "student7": "https://logindev.lexplore.com/go/nbSTogG-nk6Hfm9WAj8t6Q",
     "idStudent7": 257923,
-    "idStudent1": 257919
+    "idStudent1": 257919,
+    "nameStudent1": "student 1",
+    "nameStudent7": "student 7",
+    "homePageUrl": "https://appdev.lexplore.com/student/home",
+    "student1_name": "student 1",
+    "student7_name": "student 7"
 }

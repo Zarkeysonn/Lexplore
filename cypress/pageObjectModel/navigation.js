@@ -11,18 +11,6 @@ class Navigation {
     return cy.get(".jMuduO > span");
   }
 
-  clickAddBook() {
-    this.getHomePageAddBook.click({ force: true });
-  }
-
-  clickHomeBtn() {
-    this.getHomeBtn.click({ force: true });
-  }
-
-  clickMyReading() {
-    this.getMyReading.click({ force: true });
-  }
-
   toMyReadingPage() {
     this.clickHomeBtn(); //ovo je mozda i visak?
     this.clickMyReading();
@@ -30,13 +18,10 @@ class Navigation {
 
   navigateTo(option) {
     switch (option) {
-      case myReading:
-        this.getMyReading
-          .click({ force: true })
-          .url()
-          .should("contain", "student/diary");
-      case homePage:
-        this.getHomeBtn.click().url().should("contain", "home");
+      case "myReading":
+        this.getMyReading.click({ force: true });
+        cy.url().should("contain", "student/diary");
+        break;
     }
   }
 }

@@ -1,5 +1,18 @@
 {
-    "inputBook": "Hobbit",
+    "bookName": "Hobbit",
+    "backSpace": "{backSpace}",
     "bookTypePaper": "paper", 
-    "bookTypeDigital": "digital"
+    "bookTypeDigital": "digital",
+    "empty_string": "",
+    "empty_array": ["", ""],
+    "null": null,
+    "reading_type": {
+        "free": "free",
+        "scheme": "scheme",
+        "group": "group"
+    },
+    "errorMessage": {
+        "numberOfPages": "Books added to Lexplore cannot be longer than 1500 pages",
+        "noTitle": "Please search for a book and choose one in the list"
+    }
 }

@@ -24,6 +24,20 @@
         "invalidPublisher": "Publisher name must be exact",
         "invalidGenres": "Genres selection is invalid",
         "invalidAuthors": "Authors must be an array of strings"
-      }
+      },
+
+    "navigateTo": {
+      "myReading": "myReading",
+      "homePage": "homePage"
+    },
+
+    "pagesUrl": {
+      "homePage": "https://appdev.lexplore.com/student/home",
+      "myReading": "https://appdev.lexplore.com/student/diary"
+    },
+
+    "bookName": "Hobbit"
+
+
 }
 
