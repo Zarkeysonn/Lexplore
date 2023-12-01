@@ -2,13 +2,25 @@
     "bookId": "",
     "method": "POST",
     "comment": "Some test comment",
+    "emptyString" : "",
+    "readDate": "today",
     "date": "",
+    "zero_page": 0,
+    "page_one": 1,
+    "five_page": 5,
+    "random_text": "lorem ipsum",
+    "test_date": "November 10, 2023",
+    "successfullLogNotification": "Reading logged successfully", 
     "difficultWords": [""],
-    "endPage": 1,
+    "endPage": 27,
     "interestingWords": [""],
     "minuteSpent": 5,
     "numberOfPages": 1,
     "readingCompanion": "none",
     "readingSessionId" : "",
-    "startPage": 1
+    "startPage": 1,
+    "errorMessages": {
+        "timeSpent" : "Please enter how long you read for",
+        "laterStartPage": "Please enter an end page that is later than the start page"
+    }
 }

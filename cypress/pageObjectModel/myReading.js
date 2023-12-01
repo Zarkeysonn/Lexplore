@@ -1,6 +1,7 @@
 /// <reference types="cypress" />
 
 import data from "../fixtures/data.json";
+import activity from "../fixtures/activity_data.json";
 import bookData from "../fixtures/addNewBook.json";
 
 class MyReading {
@@ -18,6 +19,37 @@ class MyReading {
   }
   get getPaperBook() {
     return cy.get('[role="dialog"] [value="paper"]');
+  }
+  //modal od citanja
+  get logReadingModal() {
+    return cy.get('div[aria-label="Log reading"]');
+  }
+  get dateOfReading() {
+    return cy.get('div[id="dialogContent"] input[value="today"]');
+  }
+  //
+  get logReadingBtn() {
+    return cy.get('button[data-cy="bookCard.primaryAction"]');
+  }
+
+  //notifikacija za uspesno log activity
+  get successfulLogReadingNotification() {
+    return cy.get('div button[aria-label="close"]');
+  }
+
+  get saveLogReadingBtn() {
+    return cy.get('button[data-cy="proceed.modal"]');
+  }
+
+  get timeSpent() {
+    return cy.get('input[id="minutes.spent"]');
+  }
+
+  get startPage() {
+    return cy.get('input[id="start.page"]');
+  }
+  get endPage() {
+    return cy.get('input[id="end.page"]');
   }
 
   get getDigitalBook() {
@@ -80,6 +112,10 @@ class MyReading {
     return cy.get('div[name="error.title"] svg').eq(0);
   }
 
+  get notificationContainer() {
+    return cy.get(".Toastify__toast-container");
+  }
+
   //getuj readingType
   get readingType() {
     return cy.get('input[name="reading.type"][type="radio"]');
@@ -89,10 +125,20 @@ class MyReading {
     return cy.get('[data-cy="book-link"]');
   }
 
+  //getter za kalendar
+  get calendar() {
+    return cy.get('div[role="grid"]');
+  }
+
+  // ovo nije dobar selektor
   get errorMssgNumOfPages1500() {
     return cy.get(
       ".FormErrorMessage__StyledFormErrorMessage-sc-1dlt5p8-0 > span"
     );
+  }
+
+  get errorTimeSpentMessage() {
+    return cy.get('div[name="error.minutes.spent"]');
   }
 
   findBookText(text) {
@@ -101,6 +147,60 @@ class MyReading {
       .find(`img[alt*="${text}"]`)
       .next();
   }
+
+  // cy.get('[aria-label="Thursday, 16 November 2023"]')
+
+  logReadingActivity({
+    readDate = activity.readDate,
+    startPage = activity.startPage, //1
+    endPage = activity.endPage,
+    timeSpent = activity.minuteSpent,
+    successfull = true,
+    errorMessages = activity.emptyString,
+  }) {
+    // uraditi i sa switchem kada je ok i kada nije kao prosla funkcija
+    // intercept readProgress ( jer to ustvari ja i cekam da se izvrsi :) )
+    cy.intercept("**/user/readProgress").as("interceptLog");
+    this.logReadingBtn.click({ force: true }); //nakon ovog klika proveri da li se vidi modalni
+    this.logReadingModal.should("be.visible");
+    if (successfull) {
+      // moguce da sam zeznu start
+      this.startPage.click().clear().type(startPage);
+      this.startPage.click().type(`{backspace}`);
+      this.endPage.type(endPage);
+      this.timeSpent.type(timeSpent);
+      this.timeSpent.should("have.value", timeSpent);
+      this.dateOfReading.should("have.value", readDate);
+      this.startPage.should("have.value", startPage);
+      this.saveLogReadingBtn.should("not.be.disabled");
+      this.saveLogReadingBtn.click({ force: true });
+      cy.wait("@interceptLog").then(() => {
+        this.notificationContainer.should(
+          "contain.text",
+          activity.successfullLogNotification
+        );
+      });
+    } else {
+      // mozda mi ovde trebaju ifovi da vidim ako je bilo koji od parametara los
+      // error messages?
+      if (this.endPage !== endPage) {
+        this.endPage.should("have.value", "");
+      }
+      if (this.timeSpent !== timeSpent) {
+        this.timeSpent.type(timeSpent);
+        this.errorTimeSpentMessage
+          .should("be.visible")
+          .and("contain.text", errorMessages);
+      }
+      this.saveLogReadingBtn.should("be.disabled");
+    }
+  }
+
+  logActivity(
+    {
+      //
+    }
+  ) {}
 
   fillAddBook({
     bookName = bookData.bookName,

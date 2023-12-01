@@ -14,5 +14,6 @@
     "errorMessage": {
         "numberOfPages": "Books added to Lexplore cannot be longer than 1500 pages",
         "noTitle": "Please search for a book and choose one in the list"
-    }
+    },
+    "successAddBookNotification": "Book added"
 }
