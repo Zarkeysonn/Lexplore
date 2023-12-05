@@ -1,5 +1,6 @@
 {
     "bookName": "Hobbit",
+    "bookForDeletion": "Hobbit",
     "backSpace": "{backSpace}",
     "bookTypePaper": "paper", 
     "bookTypeDigital": "digital",

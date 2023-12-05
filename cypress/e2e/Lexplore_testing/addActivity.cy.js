@@ -1,5 +1,5 @@
-import addBook from './validAddBook.cy'
+import addBook from "./validAddBook.cy";
 
-describe('Testing reading acitivity update on added books', => {
-    //
-})
+describe("Testing reading acitivity update on added books", () => {
+  //
+});

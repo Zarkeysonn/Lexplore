@@ -28,12 +28,14 @@
 
     "navigateTo": {
       "myReading": "myReading",
-      "homePage": "homePage"
+      "homePage": "homePage",
+      "library": "library"
     },
 
     "pagesUrl": {
       "homePage": "https://appdev.lexplore.com/student/home",
-      "myReading": "https://appdev.lexplore.com/student/diary"
+      "myReading": "https://appdev.lexplore.com/student/diary",
+      "library": "https://appdev.lexplore.com/student/library"
     },
 
     "bookName": "Hobbit"

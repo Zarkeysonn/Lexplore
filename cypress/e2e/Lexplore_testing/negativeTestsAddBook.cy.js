@@ -18,14 +18,6 @@ describe("Negative tests for adding proccess", () => {
         statusCode: 404,
       });
     });
-
-    // pitati Andriju da li je ovo legit test ili ne bas
-    // it("number", () => {
-    //   bookApi.postBook({
-    //     method: "123",
-    //     statusCode: 404,
-    //   });
-    // });
   });
 
   context("Url parameter", () => {
@@ -40,7 +32,7 @@ describe("Negative tests for adding proccess", () => {
     //positive
     it("http", () => {
       bookApi.postBook({
-        url: "http://readingservicesdev.lexplore.com/books",
+        url: `${Cypress.env("apiOrigin")}/books`,
         statusCode: 500,
       });
     });
@@ -524,7 +516,6 @@ describe("Negative tests for adding proccess", () => {
 
   after(() => {
     bookApi.getAllBooks().then((books) => {
-      console.log(books);
       books.forEach((book) => {
         bookApi.deleteBook({ bookId: book.bookId });
       });

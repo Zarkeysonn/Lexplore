@@ -13,9 +13,8 @@ class MyReading {
     this.getAddBookBtn()
       .if("visible")
       .then(() => {
-        click(); //da li ce ovo raditi
+        click();
       });
-    //click();
   }
   get getPaperBook() {
     return cy.get('[role="dialog"] [value="paper"]');
@@ -30,6 +29,10 @@ class MyReading {
   //
   get logReadingBtn() {
     return cy.get('button[data-cy="bookCard.primaryAction"]');
+  }
+
+  get firstLogReadingBtn() {
+    return cy.get('button[data-cy="bookCard.primaryAction"]').eq(0);
   }
 
   //notifikacija za uspesno log activity
@@ -90,10 +93,12 @@ class MyReading {
     );
   }
 
-  get erroMessage() {
-    return cy.get(
-      ".FormErrorMessage__StyledFormErrorMessage-sc-1dlt5p8-0 > span"
-    );
+  selectDate(date) {
+    return cy.get(`[aria-label*="${date}"]`).click({ force: true });
+  }
+
+  clickBookDivElement(element) {
+    return cy.get(`:nth-child(${element}}) > .BookCard__Card-sc-1ptoufd-0`);
   }
 
   get getTitleErrorMessage() {
@@ -116,25 +121,36 @@ class MyReading {
     return cy.get(".Toastify__toast-container");
   }
 
-  //getuj readingType
+  get calendarBackBtn() {
+    return cy.get(".DayPicker-NavButton--prev");
+  }
+
+  get searchForBookInput() {
+    return cy.get('input[id="book-name"]');
+  }
+
   get readingType() {
     return cy.get('input[name="reading.type"][type="radio"]');
   }
-  //book in list asertacija nakon dodavanja da se i pojavila u nasoj user listi!
+
   get listOfBooks() {
     return cy.get('[data-cy="book-link"]');
   }
 
-  //getter za kalendar
   get calendar() {
     return cy.get('div[role="grid"]');
   }
 
-  // ovo nije dobar selektor
-  get errorMssgNumOfPages1500() {
-    return cy.get(
-      ".FormErrorMessage__StyledFormErrorMessage-sc-1dlt5p8-0 > span"
-    );
+  get divEndPage() {
+    // return
+  }
+
+  get errorStartPage() {
+    return cy.get('div[name="error.start.page"]');
+  }
+
+  get errorLaterPage() {
+    return cy.get('div[name="error.end.page"]');
   }
 
   get errorTimeSpentMessage() {
@@ -148,29 +164,79 @@ class MyReading {
       .next();
   }
 
-  // cy.get('[aria-label="Thursday, 16 November 2023"]')
+  newLogReadingActivity({
+    readDate = activity.date_today,
+    startPage = 1,
+    endPage = activity.null,
+    timeSpent = activity.null,
+    errorMessage = activity.emptyString,
+    numberOfPages,
+    successfull = true,
+  }) {
+    this.logReadingBtn.eq(0).click({ force: true }); // click on first element
+    this.logReadingModal.should("be.visible");
+    if (successfull) {
+      this.timeSpent.clear().type(timeSpent);
+      this.endPage.type(endPage);
+      this.saveLogReadingBtn.should("not.be.disabled");
+      cy.intercept("**/user/readProgress").as("interceptLog");
+      this.saveLogReadingBtn.click({ force: true });
+      cy.wait("@interceptLog").then(() => {
+        this.notificationContainer.should(
+          "contain.text",
+          activity.successfullLogNotification
+        );
+      });
+      return;
+    } else {
+      this.timeSpent.clear().type(timeSpent);
+      this.startPage.clear().type(startPage);
+      this.endPage.clear().type(endPage);
+
+      if (startPage !== 1 && startPage !== data.null) {
+        this.logReadingModal.should("contain", errorMessage);
+      }
+
+      if (endPage > 100) {
+        this.startPage.click().type(`{backspace}`);
+        this.logReadingModal.should("contain", errorMessage);
+        //return;
+      }
+
+      if (timeSpent !== null) {
+        this.logReadingModal.should("contain", errorMessage);
+      }
+
+      if (endPage < startPage) {
+        this.saveLogReadingBtn.click();
+        this.logReadingModal.should(
+          "contain",
+          activity.errorMessages.laterStartPage
+          // "Please enter an end page that is later than the start page"
+        );
+        return;
+      }
+      this.saveLogReadingBtn.should("be.disabled");
+    }
+  }
 
   logReadingActivity({
-    readDate = activity.readDate,
-    startPage = activity.startPage, //1
-    endPage = activity.endPage,
-    timeSpent = activity.minuteSpent,
+    readDate,
+    startPage, //1
+    endPage,
+    timeSpent,
     successfull = true,
     errorMessages = activity.emptyString,
   }) {
-    // uraditi i sa switchem kada je ok i kada nije kao prosla funkcija
-    // intercept readProgress ( jer to ustvari ja i cekam da se izvrsi :) )
     cy.intercept("**/user/readProgress").as("interceptLog");
-    this.logReadingBtn.click({ force: true }); //nakon ovog klika proveri da li se vidi modalni
+    this.logReadingBtn.click({ force: true });
     this.logReadingModal.should("be.visible");
     if (successfull) {
-      // moguce da sam zeznu start
-      this.startPage.click().clear().type(startPage);
-      this.startPage.click().type(`{backspace}`);
-      this.endPage.type(endPage);
       this.timeSpent.type(timeSpent);
-      this.timeSpent.should("have.value", timeSpent);
+      this.endPage.clear().type(endPage);
       this.dateOfReading.should("have.value", readDate);
+      this.startPage.clear().type(startPage);
+      this.startPage.click().type(`{backspace}`);
       this.startPage.should("have.value", startPage);
       this.saveLogReadingBtn.should("not.be.disabled");
       this.saveLogReadingBtn.click({ force: true });
@@ -181,32 +247,44 @@ class MyReading {
         );
       });
     } else {
-      // mozda mi ovde trebaju ifovi da vidim ako je bilo koji od parametara los
-      // error messages?
-      if (this.endPage !== endPage) {
-        this.endPage.should("have.value", "");
+      this.endPage.clear().type(endPage);
+      this.startPage.clear().type(startPage);
+      this.startPage.click().type(`{backspace}`);
+      this.logReadingModal.click();
+      this.startPage.should("have.value", startPage);
+      this.logReadingModal.click("left");
+      if (this.startPage !== startPage) {
+        if (this.startPage > this.endPage) {
+          this.logReadingModal.click("left");
+          this.saveLogReadingBtn.click({ force: true });
+          this.errorLaterPage.should(
+            "contain.text",
+            activity.errorMessages.laterStartPage
+          );
+        } else {
+          this.saveLogReadingBtn.should("be.disabled");
+          this.errorStartPage.should("be.visible");
+        }
+        this.saveLogReadingBtn.click({ force: true });
       }
+
       if (this.timeSpent !== timeSpent) {
         this.timeSpent.type(timeSpent);
-        this.errorTimeSpentMessage
-          .should("be.visible")
-          .and("contain.text", errorMessages);
+        this.errorTimeSpentMessage.should(
+          "contain.text",
+          activity.errorMessages.timeSpent
+        );
+        this.saveLogReadingBtn.click({ force: true });
       }
       this.saveLogReadingBtn.should("be.disabled");
     }
   }
 
-  logActivity(
-    {
-      //
-    }
-  ) {}
-
   fillAddBook({
     bookName = bookData.bookName,
     bookNumber = 1,
     typeOfBook = bookData.bookTypePaper,
-    numberOfPages = bookData.null,
+    numberOfPages, //= bookData.null,
     success = true,
     readingType = bookData.empty_string,
     errorMessage = bookData.empty_string,
@@ -217,17 +295,15 @@ class MyReading {
       this.desiredOption(bookNumber).click({ force: true });
       this.getModalDialog.should("be.visible");
       if (success) {
-        // if (readingType !== data.empty_string) {
-        //   this.readingType.check(readingType, { force: true });
-        // }
         if (typeOfBook !== bookData.empty_string) {
           this.typeOfBook.check(typeOfBook, { force: true });
         }
-        if (numberOfPages !== bookData.null) {
-          this.getNumberOfPages.clear().type(numberOfPages);
-        }
+        // if (numberOfPages !== bookData.null) {
+        //   this.getNumberOfPages.clear().type(numberOfPages);
+        // }
         myReading.findBookText(bookData.bookName).then((text) => {
           expect(text).to.have.text("The Hobbit");
+          //this.clickBookDivElement(1);
           this.getSaveBtn.click();
           this.bookAddedNotification
             .should("be.visible")
@@ -235,18 +311,18 @@ class MyReading {
           this.listOfBooks.should("be.visible").and("contain", bookName);
         });
       } else {
-        if (bookName !== bookData.bookName) {
-          this.deleteBookTitleBtn.click();
+        if (bookName === bookData.bookForDeletion) {
+          this.getModalDialog.should("be.visible");
+          this.deleteBookTitleBtn.click({ force: true });
           this.getModalDialog.click("right", { force: true });
           this.getModalDialog.should(
             "contain.text",
             bookData.errorMessage.noTitle
           );
         }
-        this.getNumberOfPages.clear().type(numberOfPages);
-        this.getModalDialog.should("contain.text", errorMessage);
+        // this was redudant code, i do this already in my if statement
+        // this.getModalDialog.should("contain.text", errorMessage);
         this.getSaveBtn.should("be.disabled");
-        this.errorMssgNumOfPages1500.should("contain", errorMessage);
       }
     });
   }

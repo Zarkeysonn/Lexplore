@@ -15,72 +15,114 @@ describe("Log reading processes", () => {
 
   context("Good Log reading process", () => {
     beforeEach(() => {
-      //navigation.navigateTo(data.navigateTo.myReading);
-      //
-      myReading.fillAddBook({});
+      myReading.fillAddBook({ success: true });
     });
-    it("Happy flow HARDCODED", () => {
+
+    it.only("Happy flow with new log reading activity", () => {
+      myReading.newLogReadingActivity({
+        timeSpent: activity.minuteSpent,
+        endPage: activity.five_page,
+        successfull: true,
+      });
+    });
+
+    it.skip("Calendar", () => {
       myReading.logReadingBtn.click({ force: true });
-      myReading.logReadingModal.should("be.visible");
-      myReading.dateOfReading.should("have.value", "today");
-      myReading.dateOfReading.click();
+      myReading.dateOfReading.click({ force: true });
       myReading.calendar.should("be.visible");
-      myReading.timeSpent.type(3);
-      myReading.timeSpent.should("have.value", 3);
-      myReading.endPage.type(1);
-      myReading.endPage.should("have.value", 1);
-      myReading.saveLogReadingBtn.click({ force: true });
-      //treba mi neki intercept koji ce mi proveriti da li se ovo desilo nakon
-      //klika na save dugme
-      myReading.bookAddedNotification.should("be.visible");
-    });
-    // radi kada je okej
-    it("Happy flow with FUNCTION", () => {
-      myReading.logReadingActivity({});
+      myReading.calendarBackBtn.click({ force: true });
+      myReading.selectDate(12);
     });
   });
-  // negativni case
-  context.only("Bad cases", () => {
+
+  // negativni case, ne zaboraviti na error message da assertujem
+  context("Bad cases", () => {
     beforeEach(() => {
       myReading.fillAddBook({});
     });
 
-    //error messages?
-    it("Empty endPage", () => {
-      myReading.logReadingActivity({
-        endPage: activity.zero_page,
+    it("End page is 0", () => {
+      myReading.newLogReadingActivity({
+        timeSpent: activity.minuteSpent,
+        endPage: activity.backspace,
         successfull: false,
       });
     });
 
-    it("Empty timeSpent", () => {
-      myReading.logReadingActivity({
+    it("End page > number of pages", () => {
+      myReading.newLogReadingActivity({
+        timeSpent: activity.minuteSpent,
+        endPage: 300,
+        successfull: false,
+        errorMessage: activity.errorMessages.endPageBiggerThanTotalPages,
+      });
+    });
+
+    it("Time spent is 0", () => {
+      myReading.newLogReadingActivity({
         timeSpent: activity.zero_page,
-        errorMessages: activity.errorMessages.timeSpent,
+        endPage: activity.five_page,
         successfull: false,
       });
     });
 
-    it("Time spent random string", () => {
-      myReading.logReadingActivity({
+    it("Start page is 0", () => {
+      myReading.newLogReadingActivity({
+        startPage: activity.zero_page,
+        endPage: activity.five_page,
+        timeSpent: activity.minuteSpent,
+        errorMessage: activity.errorMessages.startPage,
+        successfull: false,
+      });
+    });
+
+    // ok works
+    it("Empty time spent", () => {
+      myReading.newLogReadingActivity({
+        timeSpent: activity.zero_page,
+        endPage: activity.five_page,
+        errorMessage: activity.errorMessages.timeSpent,
+        successfull: false,
+      });
+    });
+
+    // ok
+    it("Time spent is random string", () => {
+      myReading.newLogReadingActivity({
         timeSpent: activity.random_text,
+        endPage: activity.five_page,
+        errorMessage: activity.errorMessages.timeSpent,
         successfull: false,
       });
     });
 
-    // case when start page > end page value
-    it.only("Start page bigger than end page", () => {
-      //nije mi okej funkcija za ovaj slucaj jer je ovo prvobitno ok
-      //zato sto save nije odmah disableovan
-      myReading.startPage;
-      myReading.getSaveBtn.should("be.disabled");
-      myReading.logReadingModal.should(
-        "contain.text",
-        activity.errorMessages.laterStartPage
-      );
+    it("Start page > end Page", () => {
+      myReading.newLogReadingActivity({
+        timeSpent: activity.minuteSpent,
+        startPage: activity.five_page,
+        endPage: activity.page_one,
+        successfull: false,
+      });
     });
 
-    //probati ovde sa after each delete da nije problem tu
+    it("End page 101 pages ahead of start page", () => {
+      myReading.newLogReadingActivity({
+        timeSpent: activity.minuteSpent,
+        endPage: activity.page101,
+        successfull: false,
+        errorMessage: activity.errorMessages.endPage101Ahead,
+      });
+    });
+
+    it("Start page is 0 or empty string", () => {
+      myReading.newLogReadingActivity({
+        startPage: 0,
+        endPage: 1,
+        timeSpent: 1,
+        successfull: false,
+      });
+    });
+
     afterEach(() => {
       bookApi.getAllBooks().then((books) => {
         books.forEach((book) => {
@@ -89,8 +131,10 @@ describe("Log reading processes", () => {
       });
     });
   });
-  //after ludace
-  after(() => {
+
+  // after everything not working if doing only negative cases because
+  // there is nothing to delete... (make it better IF or something)
+  afterEach(() => {
     bookApi.getAllBooks().then((books) => {
       books.forEach((book) => {
         bookApi.deleteBook({ bookId: book.bookId });

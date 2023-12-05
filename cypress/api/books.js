@@ -8,9 +8,8 @@ module.exports = {
     url = `${Cypress.env("apiOrigin")}/books`, //ovako,
     authors = data.authors,
     coverUrl = "",
-    //cookie = "",
     description = data.description,
-    format = data.format, //obavezan parametar izgleda...
+    format = data.format,
     genres = data.genres,
     isbn = data.isbn,
     numberOfPages = data.numberOfPages,
@@ -55,16 +54,34 @@ module.exports = {
       });
   },
 
-  // try {
-  //   const response = await fetch('http://localhost:3001/api/', options)
-  //   return await response.json()
-  // }catch(error){
-  //   console.error(error)
-  // }
+  // importujem ovaj fajl u cy.js i onda pozovem ovu funkciju u beforeu i
+  // uzmem bookId i prosledim ga u klik na neku zeljenu knjigu
+  // zatim u details prosledim isti taj bookID apiu
+  getAllBooksFromLibrary() {
+    return cy
+      .request({
+        method: "GET",
+        failOnStatusCode: false,
+        url: `${Cypress.env("apiOrigin")}/books?libraryType=eLibrary`,
+      })
+      .then((response) => {
+        return response.body;
+      });
+  },
 
-  //user/readProgress
+  /*
+  Ovaj api mi treba za dobavljanje odredjene knjige
+  Treba da mi vrati numberOfPages i lastReadPage
+  */
+  getBookDetails(
+    {
+      //
+    }
+  ) {
+    // return response.body
+  },
+
   postActivity({
-    //cookie,
     bookId = activity.bookId,
     method = activity.method,
     comment = activity.comment,
@@ -98,11 +115,7 @@ module.exports = {
           readingSessionId: "spsdw46x7",
         },
       },
-      headers: {
-        //Cookie: cookie,
-      },
     }).then((response) => {
-      console.log(response);
       expect(response.status).to.eq(statusCode);
     });
   },

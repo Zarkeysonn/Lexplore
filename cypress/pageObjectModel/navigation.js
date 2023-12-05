@@ -11,6 +11,10 @@ class Navigation {
     return cy.get(".jMuduO > span");
   }
 
+  get library() {
+    return cy.get("a[href='/student/library'][type='button']");
+  }
+
   toMyReadingPage() {
     this.clickHomeBtn(); //ovo je mozda i visak?
     this.clickMyReading();
@@ -21,6 +25,11 @@ class Navigation {
       case "myReading":
         this.getMyReading.click({ force: true });
         cy.url().should("contain", "student/diary");
+        break;
+
+      case "library":
+        this.library.click({ force: true });
+        cy.url().should("contain", "/library");
         break;
     }
   }

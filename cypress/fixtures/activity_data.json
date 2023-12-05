@@ -4,15 +4,18 @@
     "comment": "Some test comment",
     "emptyString" : "",
     "readDate": "today",
-    "date": "",
+    "date_today": "today",
     "zero_page": 0,
     "page_one": 1,
+    "page101": 102,
+    "backspace": "{backspace}",
     "five_page": 5,
     "random_text": "lorem ipsum",
     "test_date": "November 10, 2023",
     "successfullLogNotification": "Reading logged successfully", 
     "difficultWords": [""],
     "endPage": 27,
+    "null": null,
     "interestingWords": [""],
     "minuteSpent": 5,
     "numberOfPages": 1,
@@ -21,6 +24,9 @@
     "startPage": 1,
     "errorMessages": {
         "timeSpent" : "Please enter how long you read for",
-        "laterStartPage": "Please enter an end page that is later than the start page"
+        "laterStartPage": "Please enter an end page that is later than the start page",
+        "startPage": "Please enter what page you read from",
+        "endPage101Ahead": "The number of pages read cannot be higher than 100. Please lower it.",
+        "endPageBiggerThanTotalPages": "End page can't be higher than the total number of pages"
     }
 }

@@ -21,14 +21,12 @@ describe("Add book proccess with UI testing", () => {
 
   context("Happy", () => {
     it("Happy flow", () => {
-      //cy.url().should("include", "/student/diary");
       myReading.fillAddBook({});
     });
   });
 
   context("Negative scenarios for adding book", () => {
     it("Number of pages is clear", () => {
-      //navigation.navigateTo(data.navigateTo.myReading); //will this work?
       myReading.fillAddBook({
         numberOfPages: 0,
         success: false,
@@ -37,31 +35,22 @@ describe("Add book proccess with UI testing", () => {
     });
 
     it("Number of pages is empty array", () => {
-      //navigation.navigateTo(data.navigateTo.myReading);
-      //cy.url().should("include", "/student/diary");
       myReading.fillAddBook({
         numberOfPages: `${bookData.empty_array}`,
         success: false,
       });
     });
 
-    it("Title is empty", () => {
-      //navigation.navigateTo(data.navigateTo.myReading);
-      myReading.getSearchForBook.type(bookData.bookName);
-      myReading.desiredOption(1).click({ force: true });
-      myReading.getModalDialog.should("be.visible");
-      myReading.deleteBookTitleBtn.click();
-      myReading.getModalDialog.click("right", { force: true });
-      myReading.getModalDialog.should(
-        "contain.text",
-        bookData.errorMessage.noTitle
-      );
+    it.only("Title is empty", () => {
+      myReading.fillAddBook({
+        bookName: bookData.bookForDeletion,
+        success: false,
+      });
     });
   });
 
   after(() => {
     bookApi.getAllBooks().then((books) => {
-      console.log(books);
       books.forEach((book) => {
         bookApi.deleteBook({ bookId: book.bookId });
       });
