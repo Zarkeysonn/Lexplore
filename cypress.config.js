@@ -1,7 +1,7 @@
 const { defineConfig } = require("cypress");
 
 module.exports = defineConfig({
-  requestTimeout: 30000,
+  chromeWebSecurity: false,
   env: {
     interceptUrl:
       "https://readingservicesdev.lexplore.com/activities/lastPerBook",
