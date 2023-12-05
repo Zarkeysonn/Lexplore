@@ -14,8 +14,14 @@ describe("Reading book", () => {
     cy.url().should("eq", loginData.homePageUrl);
     navigation.navigateTo(data.navigateTo.library);
   });
-  it("Something", () => {
-    console.log(bookApi.getAllBooksFromLibrary());
-    library.clickOnWantedBook(2).click();
+  it("Read book to the end", () => {
+    //library.getBookID(2); //response body sa detailjima knjige
+    //for (let i; i < 3; i++) {
+    library.readingProgress({ option: 2 }); //46 epub, 2 je gulhoj
+    library.showProgressBtn.click();
+    library.bookProgressPercentage.should("have.text", "100%");
+  });
+  after(() => {
+    //obrisi tj. vrati na pocetno stanje
   });
 });

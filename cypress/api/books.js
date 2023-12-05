@@ -54,21 +54,6 @@ module.exports = {
       });
   },
 
-  // importujem ovaj fajl u cy.js i onda pozovem ovu funkciju u beforeu i
-  // uzmem bookId i prosledim ga u klik na neku zeljenu knjigu
-  // zatim u details prosledim isti taj bookID apiu
-  getAllBooksFromLibrary() {
-    return cy
-      .request({
-        method: "GET",
-        failOnStatusCode: false,
-        url: `${Cypress.env("apiOrigin")}/books?libraryType=eLibrary`,
-      })
-      .then((response) => {
-        return response.body;
-      });
-  },
-
   /*
   Ovaj api mi treba za dobavljanje odredjene knjige
   Treba da mi vrati numberOfPages i lastReadPage
