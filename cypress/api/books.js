@@ -54,16 +54,45 @@ module.exports = {
       });
   },
 
-  /*
-  Ovaj api mi treba za dobavljanje odredjene knjige
-  Treba da mi vrati numberOfPages i lastReadPage
-  */
-  getBookDetails(
-    {
-      //
+  restartReadPages({
+    method = "POST",
+    url = `${Cypress.env("apiOrigin")}/user/readProgress`,
+    bookId,
+    resumeInformation = { lastReadPage: 0 },
+    //readingSessionId,
+    userId = 257919,
+  }) {
+    const dataS = `${this.generateString(9)}`;
+    return cy
+      .request({
+        method: method,
+        url: url,
+        failOnStatusCode: false,
+        body: {
+          readingActivityData: {
+            bookId: bookId,
+            pages: [],
+            resumeInformation: resumeInformation,
+            // readingSessionId missing
+            readingSessionId: dataS,
+            userId: userId,
+          },
+        },
+      })
+      .then((response) => {
+        expect(response.status).eq(200);
+      });
+  },
+
+  generateString(length) {
+    const characters = "abcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
-  ) {
-    // return response.body
+
+    return result;
   },
 
   postActivity({
