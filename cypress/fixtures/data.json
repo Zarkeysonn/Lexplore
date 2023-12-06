@@ -38,8 +38,15 @@
       "library": "https://appdev.lexplore.com/student/library"
     },
 
-    "bookName": "Hobbit"
-
-
-}
+    "bookName": "Hobbit",
+    "gulhojBook": "Whales and dolphins - The Treasure 3",
+    "whalesBookUUID": "b5029747-ae86-11ec-a98f-29e70f91aba6",
+    "whalesBookID": 8528,
+    "epubBook": "Tjorme Bietse — Girtepilote",
+    "tjormeBookUUID": "aa242760-ae86-11ec-a98f-29e70f91aba6",
+    "tjormeBookID": 8323,
+    "tbaBook": "Lerke pusser opp (nynorsk)",
+    "lerkeBookUUID": "a8e0c6d4-ae86-11ec-a98f-29e70f91aba6",
+    "lerkeBookID": 8299
+  }
 
