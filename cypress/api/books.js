@@ -1,6 +1,12 @@
 import data from "../fixtures/data.json";
 import activity from "../fixtures/activity_data.json";
 
+// program to generate random strings
+
+// declare all characters
+const characters =
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
 module.exports = {
   postBook({
     method = data.method,
@@ -43,6 +49,7 @@ module.exports = {
         if (statusCode === 200) {
           console.log(response.body);
           expect(response.body).to.have.property("bookId");
+          //expect(response.body).to.have.property("numberOfPages");
           //return response.body;
         }
         if (statusCode !== 200 && statusCode !== 404) {
@@ -117,21 +124,31 @@ module.exports = {
       body: {
         readingActivityData: {
           bookId: bookId,
-          date: "2023-11-20T12:34:23.894Z",
-          comment: "My comment helooouu",
-          difficultWords: [],
-          interestingWords: [],
-          readingCompanion: "none",
-          endPage: 27,
-          minutesSpent: 27,
-          startPage: 1,
-          numberOfPages: 69,
-          readingSessionId: "spsdw46x7",
+          date: date,
+          comment: comment,
+          difficultWords: difficultWords,
+          interestingWords: interestingWords,
+          readingCompanion: readingCompanion,
+          endPage: endPage,
+          minutesSpent: minutesSpent,
+          startPage,
+          numberOfPages,
+          readingSessionId,
+          startPage,
         },
       },
     }).then((response) => {
       expect(response.status).to.eq(statusCode);
     });
+  },
+
+  generateString(length) {
+    let result = " ";
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
   },
 
   getAllBooks() {
@@ -142,6 +159,9 @@ module.exports = {
         url: `${Cypress.env("apiOrigin")}/books?libraryType=readingDiary`,
       })
       .then((response) => {
+        //expect(response.body).to.have.length.greaterThan(0);
+        expect(response.body[0]).to.have.property("bookId");
+        //expect(response.body.length).to.have.lengthOf.above(0);
         console.log(response.body, "Response body for get all boooks");
         return response.body;
       });
@@ -152,7 +172,7 @@ module.exports = {
       .request({
         method: "DELETE",
         failOnStatusCode: false,
-        url: `https://readingservicesdev.lexplore.com/books/${bookId}`,
+        url: `${Cypress.env("apiOrigin")}/books/${bookId}`, //https://readingservicesdev.lexplore.com/books/${bookId},
       })
       .then((response) => {
         expect(response.status).to.eq(200);

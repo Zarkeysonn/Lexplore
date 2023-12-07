@@ -83,6 +83,7 @@ module.exports = {
     });
   },
 
+  // ova funkcija mi je nepotrebna ne koristim je
   studentIsFriend({ userId }) {
     this.getAllFriends({}).then((friends) => {
       friends.forEach((friend) => {
