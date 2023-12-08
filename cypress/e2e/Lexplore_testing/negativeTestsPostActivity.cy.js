@@ -14,7 +14,6 @@ describe("Test scenario for invalid log of activity", () => {
         bookId: "1209320",
         statusCode: 422,
       });
-      console.log(Response);
     });
 
     it("numbers", () => {
@@ -279,7 +278,6 @@ describe("Test scenario for invalid log of activity", () => {
 
   after(() => {
     bookApi.getAllBooks().then((books) => {
-      console.log(books);
       books.forEach((book) => {
         bookApi.deleteBook({ bookId: book.bookId });
       });

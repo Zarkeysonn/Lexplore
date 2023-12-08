@@ -4,12 +4,11 @@ import login from "../../fixtures/login.json";
 
 describe("My first e2e testing", () => {
   beforeEach(() => {
-    cy.intercept(`${Cypress.env("interceptUrl")}`).as("interceptLogin");
-    cy.request({
-      url: `${Cypress.env("loginStudent1")}`,
-      failOnStatusCode: false,
-    });
-    cy.visit(login.student1);
+    cy.intercept(
+      "https://readingservicesdev.lexplore.com/activities/lastPerBook"
+    ).as("interceptLogin");
+    cy.visit("https://logindev.lexplore.com/go/5yU3DaVNH0GmIjPBMJXWDg");
+    //cy.visit(login.student1);
     cy.wait("@interceptLogin");
   });
   it("Test valid add of book ", () => {
@@ -20,25 +19,25 @@ describe("My first e2e testing", () => {
     cy.request({
       method: "PUT",
       failOnStatusCode: false,
-      url: `${Cypress.env("apiOrigin")}/books`,
-      //statusCode: bookData.statusCode404,
+      url: `${Cypress.config("addBookUrl")}/books`,
       headers: {
         Cookie: `${cookie1.name}=${cookie1.value}; ${cookie2.name}=${cookie2.value}`,
       },
       body: {
-        authors: bookData.authors, //["George R. R. Martin"],
-        coverUrl: bookData.coverUrl, // "https://books.google.com/books/content?id=bIZiAAAAMAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", //ovo staviti u fixtures i onda izvuci odatle
-        description: bookData.description, // "Fantasy-roman.",
-        format: bookData.format, //"paper",
-        genres: bookData.genres, //["Fiction"],
+        authors: ["George R. R. Martin"],
+        coverUrl:
+          "https://books.google.com/books/content?id=bIZiAAAAMAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+        description: "Fantasy-roman.",
+        format: "paper",
+        genres: ["Fiction"],
         isbn: "",
-        numberOfPages: bookData.numberOfPages,
-        publisher: bookData.publisher, //  "Bantam",
-        title: bookData.title, //"A Game of Thrones",
+        numberOfPages: 876,
+        publisher: "Bantam",
+        title: "A Game of Thrones",
       },
     }).then((response) => {
       cy.log(JSON.stringify(response.status));
-      console.log(response);
+      //console.log(response)
       expect(response.status).to.eql(200);
     });
   });

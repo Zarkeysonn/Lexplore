@@ -41,11 +41,7 @@ describe("Testing sending and accepting friend request", () => {
           userId: studentLogin.idStudent7,
           statusCode: 200,
         });
-        //console.log(friendsApi.getAllFriends({}));
-
         login.authStudents(studentLogin.student7);
-        //friendsApi.studentIsFriend({ userId: studentLogin.idStudent1 });
-
         friendsApi.checkIfStudentIsFriend({ userId: studentLogin.idStudent1 });
       });
     }
@@ -182,7 +178,6 @@ describe("Testing sending and accepting friend request", () => {
       // Test invalid cases for accepting frend: 1st send request from s1 to s7
       // login as s7 and accept friend with wrong parameter
       context("Invalid cases for accepting friendship", () => {
-        //i ovo srediti
         it("Bad method parameter: PUT", () => {
           login.authStudents(studentLogin.student7);
           friendsApi.acceptFriendRequest({
@@ -249,11 +244,9 @@ describe("Testing sending and accepting friend request", () => {
             friendsApi.acceptFriendRequest({
               accepted: true,
               requestSender: 313123,
-              statusCode: 409, //pitati Andriju da mi pojasni ovo zasto on vraca 409 kod a ne 422
+              statusCode: 409,
             });
           });
-
-          //userID is string
 
           it("Student declined friend request, check if they are friendds", () => {
             friendsApi.acceptFriendRequest({
@@ -277,10 +270,8 @@ describe("Testing sending and accepting friend request", () => {
 after(() => {
   login.authStudents("https://logindev.lexplore.com/go/5yU3DaVNH0GmIjPBMJXWDg");
   friendsApi.getAllFriends({}).then((friends) => {
-    console.log(friends);
     friends.forEach((friend) => {
       friendsApi.deleteFriend({ friendId: friend.userId });
     });
   });
 });
-//});

@@ -1,24 +1,38 @@
 class Navigation {
-    get getHomeBtn() {
-        return cy.get('xmlns="http://www.w3.org/2000/svg"')
-    }
+  get getHomeBtn() {
+    return cy.get('xmlns="http://www.w3.org/2000/svg"');
+  }
 
-    get getMyReading() {
-        return cy.get('data-cy="nav.my.books.tab"')
-    }
+  get getMyReading() {
+    return cy.get("a[href='/student/diary'][type='button']");
+  }
 
-    clickHomeBtn() {
-        this.getHomeBtn.click({force:true})
-    }
+  get getHomePageAddBook() {
+    return cy.get(".jMuduO > span");
+  }
 
-    clickMyReading() {
-        this.getMyReading.click({force:true})
-    }
+  get library() {
+    return cy.get("a[href='/student/library'][type='button']");
+  }
 
-    toMyReadingPage() {
-        this.clickHomeBtn()
-        this.clickMyReading()
+  toMyReadingPage() {
+    this.clickHomeBtn(); //ovo je mozda i visak?
+    this.clickMyReading();
+  }
+
+  navigateTo(option) {
+    switch (option) {
+      case "myReading":
+        this.getMyReading.click({ force: true });
+        cy.url().should("contain", "student/diary");
+        break;
+
+      case "library":
+        this.library.click({ force: true });
+        cy.url().should("contain", "/library");
+        break;
     }
+  }
 }
 
-export const navigation = new Navigation() 
+export const navigation = new Navigation();

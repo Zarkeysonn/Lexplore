@@ -91,7 +91,6 @@ Cypress.Commands.add(
         Cookie: `${cookie.name}=${cookie.value}`,
       },
     }).then((response) => {
-      console.log(response);
       //expect(response.status).to.eql(200);
     });
   }
@@ -137,13 +136,7 @@ Cypress.Commands.add(
         Cookie: cookie,
       },
     }).then((response) => {
-      console.log(response);
       expect(response.status).to.eql(statusCode);
     });
   }
 );
-
-//read PRogress
-Cypress.Commands.add("readProgress", () => {
-  //log za knjige
-});

@@ -13,9 +13,9 @@ module.exports = {
     failOnStatusCode = false,
     url = `${Cypress.env("apiOrigin")}/books`, //ovako,
     authors = data.authors,
-    coverUrl = data.coverUrl,
+    coverUrl = "",
     description = data.description,
-    format = data.format, //obavezan parametar izgleda...
+    format = data.format,
     genres = data.genres,
     isbn = data.isbn,
     numberOfPages = data.numberOfPages,
@@ -61,28 +61,60 @@ module.exports = {
       });
   },
 
-  // try {
-  //   const response = await fetch('http://localhost:3001/api/', options)
-  //   return await response.json()
-  // }catch(error){
-  //   console.error(error)
-  // }
+  restartReadPages({
+    method = "POST",
+    url = `${Cypress.env("apiOrigin")}/user/readProgress`,
+    bookId,
+    resumeInformation = { lastReadPage: 0 },
+    //readingSessionId,
+    userId = 257919,
+  }) {
+    const dataS = `${this.generateString(9)}`;
+    return cy
+      .request({
+        method: method,
+        url: url,
+        failOnStatusCode: false,
+        body: {
+          readingActivityData: {
+            bookId: bookId,
+            pages: [],
+            resumeInformation: resumeInformation,
+            // readingSessionId missing
+            readingSessionId: dataS,
+            userId: userId,
+          },
+        },
+      })
+      .then((response) => {
+        expect(response.status).eq(200);
+      });
+  },
 
-  //user/readProgress
+  generateString(length) {
+    const characters = "abcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    return result;
+  },
+
   postActivity({
-    //cookie,
-    bookId = activity.readingActivityData.bookId,
-    method = activity.readingActivityData.method,
-    comment = activity.readingActivityData.comment,
-    date = activity.readingActivityData.date,
-    difficultWords = activity.readingActivityData.difficultWords,
-    endPage = activity.readingActivityData.endPage,
-    interestingWords = activity.readingActivityData.interestingWords,
-    minutesSpent = activity.readingActivityData.minuteSpent,
-    numberOfPages = activity.numberOfPages,
-    readingCompanion = activity.readingActivityData.readingCompanion,
-    readingSessionId = activity.readingActivityData.readingSessionId,
-    startPage = activity.readingActivityData.startPage,
+    bookId = activity.bookId,
+    method = activity.method,
+    comment = activity.comment,
+    date = activity.date,
+    difficultWords = activity.difficultWords,
+    endPage = activity.endPage,
+    interestingWords = activity.interestingWords,
+    minutesSpent = activity.minuteSpent,
+    //numberOfPages = activity.numberOfPages,
+    readingCompanion = activity.readingCompanion,
+    readingSessionId = activity.readingSessionId,
+    startPage = activity.startPage,
     statusCode = 200,
   }) {
     cy.request({
@@ -105,11 +137,7 @@ module.exports = {
           startPage,
         },
       },
-      headers: {
-        //Cookie: cookie,
-      },
     }).then((response) => {
-      console.log(response);
       expect(response.status).to.eq(statusCode);
     });
   },
