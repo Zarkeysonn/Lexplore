@@ -6,6 +6,7 @@ describe("My first e2e testing", () => {
       "https://readingservicesdev.lexplore.com/activities/lastPerBook"
     ).as("interceptLogin");
     cy.visit("https://logindev.lexplore.com/go/5yU3DaVNH0GmIjPBMJXWDg");
+    //cy.visit(login.student1);
     cy.wait("@interceptLogin");
   });
   it("Test valid add of book ", () => {

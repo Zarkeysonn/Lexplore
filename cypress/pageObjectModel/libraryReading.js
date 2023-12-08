@@ -89,28 +89,57 @@ class Library {
     books.forEach((bookName) => {
       login.login({}); // sta je meni login? -//- NADJENO
       navigation.navigateTo(data.navigateTo.library);
-      this.bookInputField.clear({ force: true }).type(bookName);
+      this.bookInputField.clear({ force: true }).type(bookName); // ovo mi ne radi dobro jer mi kuca samo bookID
       cy.wait("@displayBooks").then(() => {
+        cy.wait(4000);
         this.clickOnWantedBook(1).click({ force: true });
         //cy.get(`li:nth-of-type(${option}) img`).click({ force: true });
       });
       cy.wait("@getBookId").then((response) => {
-        console.log(response);
         let book_ID = response.response.body.bookId;
-        //let bookId = response.response.body.bookId;
-        cy.log(book_ID, "BOOKIC ID");
         this.restartReadPages({ bookId: book_ID });
       });
     });
+  }
+
+  readBookToEnd({
+    method = "POST",
+    url = `${Cypress.env("apiOrigin")}/user/readProgress`,
+    bookId = "",
+    resumeInformation = data.lastReadPage36,
+    //resumeInformation = { lastReadPage: 0 },
+    //readingSessionId,
+    userId = data.userId,
+  }) {
+    const dataS = `${this.generateString(9)}`;
+    return cy
+      .request({
+        method: method,
+        url: url,
+        failOnStatusCode: false,
+        body: {
+          readingActivityData: {
+            bookId: 8523, // hc
+            pages: data.setPage.toLast,
+            resumeInformation: resumeInformation,
+            readingSessionId: dataS,
+            userId: userId,
+          },
+        },
+      })
+      .then((response) => {
+        expect(response.status).eq(200);
+      });
   }
 
   restartReadPages({
     method = "POST",
     url = `${Cypress.env("apiOrigin")}/user/readProgress`,
     bookId = "",
-    resumeInformation = { lastReadPage: 0 },
+    resumeInformation = data.lastReadPage0,
+    //resumeInformation = { lastReadPage: 0 },
     //readingSessionId,
-    userId = 257919,
+    userId = data.userId,
   }) {
     const dataS = `${this.generateString(9)}`;
     return cy
@@ -121,7 +150,7 @@ class Library {
         body: {
           readingActivityData: {
             bookId: bookId,
-            pages: [{ pageIndex: 0, duration: 1400, timeStamp: 1701865159 }],
+            pages: [{ pageIndex: 0, duration: 1400, timeStamp: 1701865159 }], // u data json mi je toFirst
             resumeInformation: resumeInformation,
             readingSessionId: dataS,
             userId: userId,
@@ -150,16 +179,12 @@ class Library {
     this.bookInputField.clear().type(bookName);
     this.clickOnWantedBook(option).click();
     cy.wait("@interceptDetails").then((response) => {
-      console.log(response, "MY RESPONSE"); //ok dosao je do ovde i tu mu je ceo body
       let type = response.response.body.type; //da li mi je type ok?
-      console.log(type);
       let numberOfPages = response.response.body.numberOfPages;
-      console.log(numberOfPages, "NUMBER OF PAGES"); // dobar broj stranica
       this.btnStartReading.click(); // da li ga klikne? SADA DA
 
       switch (type) {
         case "GULHOJ":
-          console.log(" u gulhoju sam");
           for (let i = 1; i < numberOfPages; i++) {
             //cy.wait(4001);
             //cy.wait(1000);
@@ -172,7 +197,6 @@ class Library {
         case "EPUB":
           // ovde imam i notification well done
           cy.wait(2000);
-          console.log("u epubu sam");
           cy.intercept("**/read/page").as("interceptSessionId");
           for (let i = 1; i <= numberOfPages; i++) {
             //cy.wait(4001);
@@ -187,24 +211,20 @@ class Library {
           // dokle god nije disableovan nije stigao do kraja
           console.log("u tba sam");
           for (let i = 1; i <= numberOfPages; i++) {
-            //cy.wait(4001);
-            cy.wait(1000);
+            cy.wait(4001);
+            //cy.wait(1000);
             this.tbaNavigateRight.should("be.visible");
             this.tbaNavigateRight.click({ force: true });
           }
-
           this.tbaNavigateRight.should("not.be.enabled");
           this.tbaProgressBtn.should("be.visible").click();
-          // this.tbaReturnBtn.click();
+          this.tbaReturnBtn.click();
           // procita do kraja, jos asertovati da je npr za ovaj primer 8 / 8 procitano?
           break;
       }
     });
   }
 
-  // importujem ovaj fajl u cy.js i onda pozovem ovu funkciju u beforeu i
-  // uzmem bookId i prosledim ga u klik na neku zeljenu knjigu
-  // zatim u details prosledim isti taj bookID apiu
   getAllBooksFromLibrary() {
     return cy
       .request({
@@ -222,18 +242,7 @@ class Library {
     cy.intercept("**/details").as("interceptDetails");
     this.clickOnWantedBook(option).click();
     cy.wait("@interceptDetails").then((response) => {
-      //console.log(response, "Response body for book details");
       return response.body;
-    });
-  }
-
-  resetReadingBook() {
-    this.getAllBooksFromLibrary().then((books) => {
-      books.forEach((book) => {
-        //ne treba mi ovaj forEach jer tacno znam koje knjige citam
-        let bookId = book.intBookId;
-        bookApi.restartReadPages({ bookId: bookId });
-      });
     });
   }
 

@@ -6,14 +6,14 @@ import { library } from "../../pageObjectModel/libraryReading";
 import bookApi from "../../api/books.js";
 
 describe("Reading book", () => {
-  beforeEach(() => {
+  before(() => {
     library.unreadBook({
-      books: [data.gulhojBook, data.epubBook, data.tbaBook],
+      books: [data.gulhojBook, data.epubBook, data.tbaBook], //lerke mi ne vrati na 0
     });
     cy.viewport(1280, 720);
+  });
+  beforeEach(() => {
     login.login({});
-
-    //cy.url().should("eq", loginData.homePageUrl);
     navigation.navigateTo(data.navigateTo.library);
     library.restartReadPages({ bookId: data.whalesBookID });
   });
@@ -27,15 +27,16 @@ describe("Reading book", () => {
       library.readingProgress({ bookName: data.epubBook, option: 1 });
     });
 
-    it("Read tba book", () => {
+    it.only("Read tba book", () => {
       library.readingProgress({ bookName: data.tbaBook, option: 1 });
     });
   });
 
-  afterEach(() => {
-    //
-    // bookApi.restartReadPages({
-    //   bookId:
-    // })
+  // 8523 knjiga / Moley and the fox - Moley 1
+
+  after(() => {
+    library.unreadBook({
+      books: [data.gulhojBook, data.epubBook, data.tbaBook],
+    });
   });
 });

@@ -25,6 +25,7 @@ module.exports = {
     cy.intercept("**/lastPerBook").as("interceptLogin");
     //treba mi nesto sa homepagea
     cy.visit(userUrl);
+    cy.wait(3000);
     cy.url().should("eq", homeUrl);
     cy.wait("@interceptLogin").then(() => {
       homePage.username.should("have.text", loginData.student1_name);
