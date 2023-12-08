@@ -1,4 +1,6 @@
 /// <reference types="cypress" />
+import bookData from "../../fixtures/data.json";
+import login from "../../fixtures/login.json";
 
 describe("My first e2e testing", () => {
   beforeEach(() => {
