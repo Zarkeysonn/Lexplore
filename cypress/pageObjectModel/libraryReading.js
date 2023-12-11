@@ -136,8 +136,8 @@ class Library {
     method = "POST",
     url = `${Cypress.env("apiOrigin")}/user/readProgress`,
     bookId = "",
-    resumeInformation = data.lastReadPage0,
-    //resumeInformation = { lastReadPage: 0 },
+    //resumeInformation = data.lastReadPage0,
+    resumeInformation = { lastReadPage: 0 },
     //readingSessionId,
     userId = data.userId,
   }) {

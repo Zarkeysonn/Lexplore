@@ -15,6 +15,10 @@ class Navigation {
     return cy.get("a[href='/student/library'][type='button']");
   }
 
+  get quizz() {
+    return cy.get("a[href='/student/quizzes'][type='button']");
+  }
+
   toMyReadingPage() {
     this.clickHomeBtn(); //ovo je mozda i visak?
     this.clickMyReading();
@@ -30,6 +34,11 @@ class Navigation {
       case "library":
         this.library.click({ force: true });
         cy.url().should("contain", "/library");
+        break;
+
+      case "quizz":
+        this.quizz.click({ force: true });
+        cy.url().should("contain", "/quizzes");
         break;
     }
   }
