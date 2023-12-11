@@ -5,10 +5,6 @@ import { library } from "../../pageObjectModel/libraryReading";
 import login from "../../api/auth";
 
 describe("Quizz teesting", () => {
-  before(() => {
-    //
-  });
-
   beforeEach(() => {
     login.login({});
   });
