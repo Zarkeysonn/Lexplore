@@ -19,11 +19,6 @@ class Navigation {
     return cy.get("a[href='/student/quizzes'][type='button']");
   }
 
-  toMyReadingPage() {
-    this.clickHomeBtn(); //ovo je mozda i visak?
-    this.clickMyReading();
-  }
-
   navigateTo(option) {
     switch (option) {
       case "myReading":
