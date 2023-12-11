@@ -3,6 +3,7 @@ import bookApi from "../api/books";
 import login from "../api/auth";
 import { navigation } from "./navigation";
 import data from "../fixtures/data.json";
+import helper from "../helper/helper";
 class Quizz {
   get retryQuizz() {
     return cy.get('[data-cy="retry.quiz"]');
@@ -59,28 +60,8 @@ class Quizz {
       ".QuizEngineResponseLayout__ResponseLayoutSuccessPercentage-sc-1lm9agf-5"
     );
   }
-  getAvailableQuizzBooks({
-    method = "GET",
-    url = `${Cypress.env("apiOrigin")}/quizzes/available`,
-  }) {
-    return cy
-      .request({
-        method: method,
-        url: url,
-        failOnStatusCode: false,
-      })
-      .then((response) => {
-        return response.body;
-      });
-  }
 
-  /* 
-Ako je skor manji ili jednak sa oldScoreom on se nece promeniti, a iz resulta izvlacim novi score
-Izvucicu skor tako sto cu prebrojati koliko tacnih odgovora ima i onda pomnoziti taj broj sa 20;
-*/
-
-  clickOnWantedBookQuizz({ bookName, answers = [], score }) {
-    let strScore = "";
+  takeBookQuizz({ bookName, answers = [], score }) {
     cy.intercept("**/quizzes/available").as("availableQuizz");
     navigation.navigateTo(data.navigateTo.quizz);
     cy.wait("@availableQuizz").then((response) => {
@@ -137,17 +118,6 @@ Izvucicu skor tako sto cu prebrojati koliko tacnih odgovora ima i onda pomnoziti
     ).click({ force: true });
   }
 
-  generateString(length) {
-    let chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-    let result = "";
-    const charactersLength = chars.length;
-    for (let i = 0; i < length; i++) {
-      result += chars.charAt(Math.floor(Math.random() * charactersLength));
-    }
-
-    return result;
-  }
-
   getQuizResult() {
     cy.intercept("**/result").as("resultScore");
     this.submitQuiz.click();
@@ -168,34 +138,6 @@ Izvucicu skor tako sto cu prebrojati koliko tacnih odgovora ima i onda pomnoziti
     cy.wait("@result").then(() => {
       return myAnswers;
     });
-  }
-
-  readBookToEnd({
-    method = "POST",
-    url = `${Cypress.env("apiOrigin")}/user/readProgress`,
-    bookId = "",
-    resumeInformation = data.lastReadPage36,
-    userId = data.userId,
-  }) {
-    const dataS = `${this.generateString(9)}`;
-    return cy
-      .request({
-        method: method,
-        url: url,
-        failOnStatusCode: false,
-        body: {
-          readingActivityData: {
-            bookId: 8528, // hc bilo, 8528 sada cu mu ja proslediti pre testa
-            pages: data.setPage.toLast,
-            resumeInformation: resumeInformation,
-            readingSessionId: dataS,
-            userId: userId,
-          },
-        },
-      })
-      .then((response) => {
-        expect(response.status).eq(200);
-      });
   }
 }
 

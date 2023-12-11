@@ -6,7 +6,8 @@ import activity from "../fixtures/activity_data.json";
 // declare all characters
 const characters =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
+// obrisao sam odavde generate string, ukoliko mi negde pravi problem
+// videti gde se poziva i samo dodati helper.
 module.exports = {
   postBook({
     method = data.method,
@@ -49,8 +50,6 @@ module.exports = {
         if (statusCode === 200) {
           console.log(response.body);
           expect(response.body).to.have.property("bookId");
-          //expect(response.body).to.have.property("numberOfPages");
-          //return response.body;
         }
         if (statusCode !== 200 && statusCode !== 404) {
           expect(`${response.body.errors[0].message.text}`).to.eql(
@@ -142,14 +141,14 @@ module.exports = {
     });
   },
 
-  generateString(length) {
-    let result = " ";
-    const charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-  },
+  // generateString(length) {
+  //   let result = " ";
+  //   const charactersLength = characters.length;
+  //   for (let i = 0; i < length; i++) {
+  //     result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  //   }
+  //   return result;
+  // },
 
   getAllBooks() {
     return cy
@@ -159,10 +158,7 @@ module.exports = {
         url: `${Cypress.env("apiOrigin")}/books?libraryType=readingDiary`,
       })
       .then((response) => {
-        //expect(response.body).to.have.length.greaterThan(0);
         expect(response.body[0]).to.have.property("bookId");
-        //expect(response.body.length).to.have.lengthOf.above(0);
-        console.log(response.body, "Response body for get all boooks");
         return response.body;
       });
   },

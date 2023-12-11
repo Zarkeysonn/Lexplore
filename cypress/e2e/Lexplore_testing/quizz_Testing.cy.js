@@ -10,8 +10,7 @@ describe("Quizz teesting", () => {
   });
 
   it("search for specific book and start quizz", () => {
-    //quizz.readBookToEnd({ bookId: data.newBookForReadingID });
-    quizz.clickOnWantedBookQuizz({
+    quizz.takeBookQuizz({
       bookName: data.gulhojBook,
       answers: data.positiveAnswers,
       score: data["80percent"],
