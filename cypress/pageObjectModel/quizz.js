@@ -1,8 +1,6 @@
 /// <reference types="cypress" />
 import bookApi from "../api/books";
-//import bookApi from "../api/books.js";
 import login from "../api/auth";
-//import login from "../../api/auth.js";
 import { navigation } from "./navigation";
 import data from "../fixtures/data.json";
 class Quizz {
@@ -48,6 +46,14 @@ class Quizz {
     );
   }
 
+  get scorePercentage() {
+    return cy.get(".QuizRow__QuizScore-sc-9s0nld-3");
+  }
+
+  get backToDashboard() {
+    return cy.get('[data-cy="go.to.dashboard"]');
+  }
+
   get skor() {
     return cy.get(
       ".QuizEngineResponseLayout__ResponseLayoutSuccessPercentage-sc-1lm9agf-5"
@@ -64,7 +70,7 @@ class Quizz {
         failOnStatusCode: false,
       })
       .then((response) => {
-        return response.body; // ovde mi se nalazi u response.body quizzUuid
+        return response.body;
       });
   }
 
@@ -74,28 +80,43 @@ Izvucicu skor tako sto cu prebrojati koliko tacnih odgovora ima i onda pomnoziti
 */
 
   clickOnWantedBookQuizz({ bookName, answers = [], score }) {
+    let strScore = "";
     cy.intercept("**/quizzes/available").as("availableQuizz");
     navigation.navigateTo(data.navigateTo.quizz);
     cy.wait("@availableQuizz").then((response) => {
-      let oldScore = response.response.body.score;
+      var oldScore = response.response.body;
+      let specificQuiz = oldScore.filter(
+        (quiz) => quiz.title == data.gulhojBook
+      );
+      let resultBeforeQuiz = specificQuiz[0].score;
       this.searchInputField.clear().type(bookName);
       this.retryQuizz.click({ force: true });
       this.quizTitle.should("be.visible").and("contain.text", "Quiz");
+      for (let i = 1; i <= answers.length; i++) {
+        this.answerQuestion(i, answers[i - 1]);
+      }
+      cy.intercept("**/result").as("resultScore");
+      cy.intercept("**/available").as("availableAfterQuiz");
+      this.submitQuiz.click();
+      this.skor.should("be.visible").and("have.text", score);
+      cy.wait("@resultScore").then((responseResult) => {
+        let score = responseResult.response.body.score;
+        score = score.substring(0, score.length - 1);
+        cy.wait("@availableAfterQuiz").then((responseAfterAvailable) => {
+          let newResponse = responseAfterAvailable.response.body;
+          let newScore = newResponse.filter(
+            (newState) => newState.title == data.gulhojBook
+          );
+          this.backToDashboard.click();
+          this.retryQuizz.should("be.visible").and("not.be.disabled");
+          if (newScore[0].score >= Number(score)) {
+            this.scorePercentage.should("contain.text", newScore[0].score);
+          } else {
+            this.scorePercentage.should("contain.text", score);
+          }
+        });
+      });
     });
-    //let currentQuizScore = this.quizScore;
-    for (let i = 1; i <= answers.length; i++) {
-      this.answerQuestion(i, answers[i - 1]);
-    }
-    // expect(this.quizIsOver).to.be.visible;
-    // this.answerNegativeQuestion(1);
-    // this.answerNegativeQuestion(2);
-    // this.answerNegativeQuestion(3);
-    // this.answerNegativeQuestion(4);
-    // this.answerNegativeQuestion(5);
-    this.submitQuiz.click();
-    cy.intercept("**/result").as("result"); //asertuj rezultat i da je gotov quizz
-    this.quizIsOver.should("be.visible");
-    this.skor.should("be.visible").and("have.text", score);
   }
 
   answerPositiveQuestion(number) {
@@ -116,28 +137,39 @@ Izvucicu skor tako sto cu prebrojati koliko tacnih odgovora ima i onda pomnoziti
     ).click({ force: true });
   }
 
-  // ok na ovu neku foru hocu
+  generateString(length) {
+    let chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
+    const charactersLength = chars.length;
+    for (let i = 0; i < length; i++) {
+      result += chars.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    return result;
+  }
+
+  getQuizResult() {
+    cy.intercept("**/result").as("resultScore");
+    this.submitQuiz.click();
+    cy.wait("@resultScore").then((response) => {
+      let score = response.response.body.score;
+      score = score.slice(0, -1);
+      //cy.log(score, "HELOO");
+      return Number(score);
+    });
+  }
+
   sendAnswers() {
     cy.intercept("**/result").as("result");
-    //let options = [true, false];
     let oldScore = this.getAvailableQuizzBook;
     this.getAvailableQuizzBooks();
     let myAnswers = [];
-
     this.submitQuiz.click();
     cy.wait("@result").then(() => {
       return myAnswers;
     });
   }
 
-  //   let answers = [];
-  //     switch(statuses){
-  //         case true:
-  //             this.positiveAnswer.click();
-  //             break;
-  //         case false:
-  //             this.positiveAnswer.click();
-  //             break;
   readBookToEnd({
     method = "POST",
     url = `${Cypress.env("apiOrigin")}/user/readProgress`,
@@ -153,7 +185,7 @@ Izvucicu skor tako sto cu prebrojati koliko tacnih odgovora ima i onda pomnoziti
         failOnStatusCode: false,
         body: {
           readingActivityData: {
-            bookId: 8523, // hc
+            bookId: 8528, // hc bilo, 8528 sada cu mu ja proslediti pre testa
             pages: data.setPage.toLast,
             resumeInformation: resumeInformation,
             readingSessionId: dataS,

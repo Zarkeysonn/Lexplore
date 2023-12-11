@@ -44,6 +44,7 @@
     },
 
     "bookName": "Hobbit",
+    "newBookForReadingProgress": "Dinner at Moley-s Moley 1",
     "gulhojBook": "Whales and dolphins - The Treasure 3",
     "whalesBookUUID": "b5029747-ae86-11ec-a98f-29e70f91aba6",
     "whalesBookID": 8528,
@@ -55,8 +56,19 @@
     "lerkeBookID": 8299,
 
     "userId": 257919,
-
+    "newBookForReadingID": 8531,
+    "newBookForReadingName": "Dinner at Moley's",
     "quizzBook": "moley and the fox",
+
+
+    "setPage": {
+      "toFirst": "[{ pageIndex: 0, duration: 1400, timeStamp: 1701865159 }]",
+      "toLast": "[{'pageIndex':0,'duration':8799,'timeStamp':1702021576},{'pageIndex':1,'duration':6433,'timeStamp':1702021582},{'pageIndex':2,'duratio':6714,'timeStam':1702021589},{'pageIndex':3,'duration':5400,'timeStamp':1702021595},{'pageIndex':4,'duration':5099,'timeStamp':1702021600},{'pageIndex':5,'duration':5632,'timeStamp':1702021605},{'pageIndex':6,'duration':6440,'timeStamp':1702021612},{'pageIndex':7,'duration':6008,'timeStamp':1702021618},{'pageIndex':8,'duration':6634,'timeStamp':1702021624},{'pageIndex':9,'duration':5916,'timeStamp':1702021630},{'pageIndex':10,'duration':6150,'timeStamp':1702021636},{'pageIndex':11,'duration':6801,'timeStamp':1702021643},{'pageIndex':12,'duration':8015,'timeStamp':1702021651},{'pageIndex':13,'duration':6715,'timeStamp':1702021658},{'pageIndex':14,'duration':5116,'timeStamp':1702021663},{'pageIndex':15,'duration':6401,'timeStamp':1702021669},{'pageIndex':16,'duration':8199,'timeStamp':1702021678},{'pageIndex':17,'duration':4616,'timeStamp':1702021682},{'pageIndex':18,'duration':6081,'timeStamp':1702021688},{'pageIndex':19,'duration':7167,'timeStamp':1702021696},{'pageIndex':20,'duration':5982,'timeStamp':1702021702},{'pageIndex':21,'duration':6132,'timeStamp':1702021708},{'pageIndex':22,'duration':6183,'timeStamp':1702021714},{'pageIndex':23,'duration':9631,'timeStamp':1702021723},{'pageIndex':24,'duration':6266,'timeStamp':1702021730},{'pageIndex':25,'duration':6517,'timeStamp':1702021736},{'pageIndex':26,'duration':4515,'timeStamp':1702021741},{'pageIndex':27,'duration':9650,'timeStamp':1702021750},{'pageIndex':28,'duration':8068,'timeStamp':1702021758},{'pageIndex':29,'duration':7079,'timeStamp':1702021766},{'pageIndex':30,'duration':7550,'timeStamp':1702021773},{'pageIndex':31,'duration':5251,'timeStamp':1702021778},{'pageIndex':32,'duration':7049,'timeStamp':1702021785},{'pageIndex':33,'duration':8933,'timeStamp':1702021794},{'pageIndex':34,'duratio':5915,'timeStamp':1702021800},{'pageIndex':35,'duration':7282,'timeStamp':1702021808},{'pageIndex':36,'duration':47987,'timeStamp':1702021814}]",
+      "lastReadPage0" : "{ lastReadPage: 0 }",
+      "lastReadPage36": "{ lastReadPage: 36 }",
+      "lastReadPage42": "{ lastReadPage: 42 }"
+    },
+
 
     "positiveAnswers": [0,0,0,0,0],
     "60percent": "60%",

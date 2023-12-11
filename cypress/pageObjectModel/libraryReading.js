@@ -106,7 +106,8 @@ class Library {
     method = "POST",
     url = `${Cypress.env("apiOrigin")}/user/readProgress`,
     bookId = "",
-    resumeInformation = data.lastReadPage36,
+    resumeInformation = data.lastReadPage42,
+    //resumeInformation = data.lastReadPage36,
     //resumeInformation = { lastReadPage: 0 },
     //readingSessionId,
     userId = data.userId,
@@ -119,7 +120,8 @@ class Library {
         failOnStatusCode: false,
         body: {
           readingActivityData: {
-            bookId: 8523, // hc
+            //bookId: 8523, // hc
+            bookId: data.newBookForReadingID,
             pages: data.setPage.toLast,
             resumeInformation: resumeInformation,
             readingSessionId: dataS,
