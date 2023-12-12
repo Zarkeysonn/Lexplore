@@ -28,6 +28,14 @@ describe("Testing mock", () => {
       myReading.pageNumber.should("be.visible").and("have.text", 1);
       cy.scrollTo("bottom");
       myReading.lastPage.should("be.visible").and("have.text", "of 6");
+      myReading.pageNavigationButtons.eq(0).should("not.be.enabled");
+      myReading.pageNavigationButtons.eq(1).should("have.text", "Next").click();
+      myReading.pageNumber.should("have.text", 2);
+      myReading.numberOfBookDisplayed.should("have.length", 48);
+      myReading.pageNavigationButtons
+        .eq(0)
+        .should("not.be.disabled")
+        .and("have.text", "Previous");
       console.log(response.response.body);
     });
   });

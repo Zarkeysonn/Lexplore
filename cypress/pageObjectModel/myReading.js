@@ -42,6 +42,10 @@ class MyReading {
     return cy.get('button[data-cy="bookCard.primaryAction"]');
   }
 
+  get pageNavigationButtons() {
+    return cy.get('button[type="button"] span span');
+  }
+
   get firstLogReadingBtn() {
     return cy.get('button[data-cy="bookCard.primaryAction"]').eq(0);
   }
