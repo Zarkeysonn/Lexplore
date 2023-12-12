@@ -2,6 +2,7 @@
 import bookApi from "../api/books";
 //import bookApi from "../api/books.js";
 import login from "../api/auth";
+import helper from "../helper/helper";
 //import login from "../../api/auth.js";
 import { navigation } from "./navigation";
 import data from "../fixtures/data.json";
@@ -87,13 +88,12 @@ class Library {
     cy.intercept("**/details").as("getBookId");
     cy.intercept("**").as("displayBooks");
     books.forEach((bookName) => {
-      login.login({}); // sta je meni login? -//- NADJENO
+      login.login({});
       navigation.navigateTo(data.navigateTo.library);
-      this.bookInputField.clear({ force: true }).type(bookName); // ovo mi ne radi dobro jer mi kuca samo bookID
+      this.bookInputField.clear({ force: true }).type(bookName);
       cy.wait("@displayBooks").then(() => {
         cy.wait(4000);
         this.clickOnWantedBook(1).click({ force: true });
-        //cy.get(`li:nth-of-type(${option}) img`).click({ force: true });
       });
       cy.wait("@getBookId").then((response) => {
         let book_ID = response.response.body.bookId;
@@ -106,12 +106,10 @@ class Library {
     method = "POST",
     url = `${Cypress.env("apiOrigin")}/user/readProgress`,
     bookId = "",
-    resumeInformation = data.lastReadPage36,
-    //resumeInformation = { lastReadPage: 0 },
-    //readingSessionId,
+    resumeInformation = data.lastReadPage42,
     userId = data.userId,
   }) {
-    const dataS = `${this.generateString(9)}`;
+    const dataS = `${helper.generateString(9)}`;
     return cy
       .request({
         method: method,
@@ -119,7 +117,8 @@ class Library {
         failOnStatusCode: false,
         body: {
           readingActivityData: {
-            bookId: 8523, // hc
+            //bookId: 8523, // hc
+            bookId: data.newBookForReadingID,
             pages: data.setPage.toLast,
             resumeInformation: resumeInformation,
             readingSessionId: dataS,
@@ -136,12 +135,10 @@ class Library {
     method = "POST",
     url = `${Cypress.env("apiOrigin")}/user/readProgress`,
     bookId = "",
-    resumeInformation = data.lastReadPage0,
-    //resumeInformation = { lastReadPage: 0 },
-    //readingSessionId,
+    resumeInformation = { lastReadPage: 0 },
     userId = data.userId,
   }) {
-    const dataS = `${this.generateString(9)}`;
+    const dataS = `${helper.generateString(9)}`;
     return cy
       .request({
         method: method,
@@ -160,17 +157,6 @@ class Library {
       .then((response) => {
         expect(response.status).eq(200);
       });
-  }
-
-  generateString(length) {
-    const characters = "abcdefghijklmnopqrstuvwxyz0123456789";
-    let result = "";
-    const charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-
-    return result;
   }
 
   // dobro ok, sada mi radi, switch za te 3 opcije

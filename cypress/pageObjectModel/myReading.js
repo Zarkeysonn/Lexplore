@@ -23,16 +23,35 @@ class MyReading {
   get logReadingModal() {
     return cy.get('div[aria-label="Log reading"]');
   }
+
+  get pageNumber() {
+    return cy.get(
+      ".Pagination__StyledMain-sc-1ghd3lf-1 > .ReactSelectStyles-sc-1j7jq0w-0 > .react-select__control"
+    );
+  }
+
   get dateOfReading() {
     return cy.get('div[id="dialogContent"] input[value="today"]');
+  }
+
+  get lastPage() {
+    return cy.get("p");
   }
   //
   get logReadingBtn() {
     return cy.get('button[data-cy="bookCard.primaryAction"]');
   }
 
+  get pageNavigationButtons() {
+    return cy.get('button[type="button"] span span');
+  }
+
   get firstLogReadingBtn() {
     return cy.get('button[data-cy="bookCard.primaryAction"]').eq(0);
+  }
+
+  get numberOfBookDisplayed() {
+    return cy.get("ul li");
   }
 
   //notifikacija za uspesno log activity
