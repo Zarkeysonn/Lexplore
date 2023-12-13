@@ -32,4 +32,15 @@ module.exports = {
       homePage.username.should("have.text", loginData.student1_name);
     });
   },
+
+  loginMultipleStudentsAndGetCookies({ user }) {
+    let cookies = [];
+    //  users.forEach((user) => {
+    let kjuti;
+    cy.intercept("**/lastPerBook").as("interceptLogin");
+    cy.visit(users);
+    cy.wait("@interceptLogin").then((response) => {});
+    //  });
+    // cy.writeFile("cypress/fixtures/cookies.json", cookies);
+  },
 };
