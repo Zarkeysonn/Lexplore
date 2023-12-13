@@ -1,3 +1,6 @@
+const { getAllBooksFromLibrary } = require("../api/api_quizz");
+const { myReading } = require("../pageObjectModel/myReading");
+
 module.exports = {
   generateString(length) {
     let chars = "abcdefghijklmnopqrstuvwxyz0123456789";
