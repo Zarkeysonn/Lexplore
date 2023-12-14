@@ -4,17 +4,21 @@ import loginData from "../fixtures/cookies.json";
 import data from "../fixtures/cookies.json";
 import { SharedArray } from "k6/data";
 import { randomIntBetween } from "https://jslib.k6.io/k6-utils/1.2.0/index.js";
+import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
+import { textSummary } from "https://jslib.k6.io/k6-summary/0.0.1/index.js";
+
+export function handleSummary(data) {
+  return {
+    "summary.html": htmlReport(data),
+  };
+}
 
 export const options = {
   stages: [
     { duration: "5s", target: 1 },
-    // { duration: "15s", target: 20 },
-    // { duration: "1m", target: 500 },
-    // { duration: "10", target: 10 },
-    // // { duration: "1m30s", target: 110 },
-    // // { duration: "20s", target: 10 },
-    // { duration: "15s", target: 2 },
-    // { duration: "2s", target: 0 },
+    { duration: "15s", target: 50 },
+    { duration: "1s", target: 50 },
+    { duration: "10s", target: 1 },
   ],
 };
 
@@ -24,7 +28,6 @@ const dataC = new SharedArray("some data nem", function () {
 
 export default function () {
   const cookieData = dataC[randomIntBetween(0, 2)].devSessionId;
-  console.log(cookieData, "COOKIE DATA");
   const jar = http.cookieJar();
   jar.set(
     "https://readingservicesdev.lexplore.com/books?libraryType=readingDiary",
@@ -39,7 +42,6 @@ export default function () {
 
   const res = http.get(
     "https://readingservicesdev.lexplore.com/books?libraryType=readingDiary"
-  ); //pokusaj sa ovim nasim studentom
-  console.log(res.body);
+  );
   check(res, { "status was 200": (r) => r.status == 200 });
 }

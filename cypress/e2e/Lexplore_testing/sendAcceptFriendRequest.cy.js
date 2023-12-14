@@ -23,7 +23,7 @@ describe("Testing sending and accepting friend request", () => {
       login.authStudents(studentLogin.student7);
       friendsApi.acceptFriendRequest({
         requestSender: studentLogin.idStudent1,
-      }); //obavezno poslatibar prazan objekat jer je u iniju same funkcije vec sve postavljeno kako treba i samo ovde se objekat prosledjuje
+      });
       friendsApi.checkIfStudentIsFriend({ userId: studentLogin.idStudent1 });
     });
   });

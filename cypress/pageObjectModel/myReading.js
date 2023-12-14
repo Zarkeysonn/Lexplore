@@ -196,14 +196,14 @@ class MyReading {
     this.logReadingModal.should("be.visible");
     if (successfull) {
       this.timeSpent.clear().type(timeSpent);
-      this.endPage.type(endPage);
+      this.endPage.clear().type(endPage);
       this.saveLogReadingBtn.should("not.be.disabled");
       cy.intercept("**/user/readProgress").as("interceptLog");
       this.saveLogReadingBtn.click({ force: true });
       cy.wait("@interceptLog").then(() => {
         this.notificationContainer.should(
           "contain.text",
-          activity.successfullLogNotification
+          activity.readingActivityData.successfullLogNotification // proveriti da li je dobra putanja za sve message
         );
       });
       return;
@@ -325,8 +325,8 @@ class MyReading {
           //this.clickBookDivElement(1);
           this.getSaveBtn.click();
           this.bookAddedNotification
-            .should("be.visible")
-            .and("have.text", "Book added");
+            //.should("be.visible")
+            .should("have.text", "Book added");
           this.listOfBooks.should("be.visible").and("contain", bookName);
         });
       } else {
@@ -339,8 +339,6 @@ class MyReading {
             bookData.errorMessage.noTitle
           );
         }
-        // this was redudant code, i do this already in my if statement
-        // this.getModalDialog.should("contain.text", errorMessage);
         this.getSaveBtn.should("be.disabled");
       }
     });

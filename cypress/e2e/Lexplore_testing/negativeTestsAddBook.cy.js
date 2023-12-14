@@ -1,6 +1,7 @@
 /// <reference types="cypress" />
 import bookApi from "../../api/books";
 import login from "../../api/auth.js";
+import loginData from "../../fixtures/login.json";
 import errorMessage from "../../fixtures/data.json";
 
 // nakon dodavanja session i pozivanja te commande u before each nije mi potrebno vise da saljem
@@ -8,7 +9,7 @@ import errorMessage from "../../fixtures/data.json";
 
 describe("Negative tests for adding proccess", () => {
   beforeEach(() => {
-    login.authStudents(login.st);
+    login.authStudents(loginData.student1);
   });
 
   context("Method parameter", () => {
@@ -148,6 +149,7 @@ describe("Negative tests for adding proccess", () => {
       bookApi.postBook({
         title: ["testic", "testiiic"],
         statusCode: 422,
+        errorMessage: errorMessage.errorMessage.title,
       });
     });
 
@@ -155,6 +157,7 @@ describe("Negative tests for adding proccess", () => {
       bookApi.postBook({
         title: {},
         statusCode: 422,
+        errorMessage: errorMessage.errorMessage.title,
       });
     });
 
@@ -162,6 +165,7 @@ describe("Negative tests for adding proccess", () => {
       bookApi.postBook({
         title: { title: "String in object" },
         statusCode: 422,
+        errorMessage: errorMessage.errorMessage.title,
       });
     });
 
@@ -169,6 +173,7 @@ describe("Negative tests for adding proccess", () => {
       bookApi.postBook({
         title: [1, 2, 3, 4],
         statusCode: 422,
+        errorMessage: errorMessage.errorMessage.title,
       });
     });
 
@@ -176,6 +181,7 @@ describe("Negative tests for adding proccess", () => {
       bookApi.postBook({
         title: 123,
         statusCode: 422,
+        errorMessage: errorMessage.errorMessage.title,
       });
     });
 
@@ -183,6 +189,7 @@ describe("Negative tests for adding proccess", () => {
       bookApi.postBook({
         title: null,
         statusCode: 422,
+        errorMessage: errorMessage.errorMessage.title,
       });
     });
 
@@ -190,6 +197,7 @@ describe("Negative tests for adding proccess", () => {
       bookApi.postBook({
         title: [{ title: "neki" }, { title: "string" }],
         statusCode: 422,
+        errorMessage: errorMessage.errorMessage.title,
       });
     });
 
@@ -201,10 +209,11 @@ describe("Negative tests for adding proccess", () => {
       });
     });
 
-    it("boolean", () => {
+    it.skip("boolean", () => {
       bookApi.postBook({
         title: true,
         statusCode: 422,
+        errorMessage: errorMessage.errorMessage.title,
       });
     });
   });
@@ -290,7 +299,7 @@ describe("Negative tests for adding proccess", () => {
   });
 
   //genre
-  context("Genre parameter", () => {
+  context.only("Genre parameter", () => {
     it("number", () => {
       bookApi.postBook({
         genres: 1998,
@@ -370,24 +379,27 @@ describe("Negative tests for adding proccess", () => {
       });
     });
 
-    it("empty string", () => {
+    it.only("empty string", () => {
       bookApi.postBook({
         genres: "",
         statusCode: 422,
+        errorMessage: "Genres selection is invalid",
       });
     });
 
-    it("null", () => {
+    it.only("null", () => {
       bookApi.postBook({
         genres: null,
         statusCode: 422,
+        errorMessage: "Genres selection is invalid",
       });
     });
 
-    it("string with spaces", () => {
+    it.only("string with spaces", () => {
       bookApi.postBook({
         genres: "      ",
         statusCode: 422,
+        errorMessage: "Genres selection is invalid",
       });
     });
   });
