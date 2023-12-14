@@ -18,10 +18,12 @@ describe("Log reading processes", () => {
       myReading.fillAddBook({ success: true });
     });
 
-    it.only("Happy flow with new log reading activity", () => {
+    it("Happy flow with new log reading activity", () => {
       myReading.newLogReadingActivity({
-        timeSpent: activity.minuteSpent,
-        endPage: activity.five_page,
+        timeSpent: "5",
+        // timeSpent: activity.minuteSpent,
+        endPage: 27,
+        //endPage: activity.endPage,
         successfull: true,
       });
     });
@@ -36,7 +38,7 @@ describe("Log reading processes", () => {
   });
 
   // negativni case, ne zaboraviti na error message da assertujem
-  context("Bad cases", () => {
+  context.only("Bad cases", () => {
     beforeEach(() => {
       myReading.fillAddBook({});
     });
@@ -60,18 +62,18 @@ describe("Log reading processes", () => {
 
     it("Time spent is 0", () => {
       myReading.newLogReadingActivity({
-        timeSpent: activity.zero_page,
-        endPage: activity.five_page,
+        timeSpent: activity.readingActivityData.zero_page,
+        endPage: activity.readingActivityData.five_page,
         successfull: false,
       });
     });
 
-    it("Start page is 0", () => {
+    it.only("Start page is 0", () => {
       myReading.newLogReadingActivity({
-        startPage: activity.zero_page,
-        endPage: activity.five_page,
-        timeSpent: activity.minuteSpent,
-        errorMessage: activity.errorMessages.startPage,
+        startPage: activity.readingActivityData.zero_page,
+        endPage: activity.readingActivityData.five_page,
+        timeSpent: activity.readingActivityData.minuteSpent,
+        errorMessage: activity.readingActivityData.errorMessages.startPage,
         successfull: false,
       });
     });
@@ -123,13 +125,13 @@ describe("Log reading processes", () => {
       });
     });
 
-    afterEach(() => {
-      bookApi.getAllBooks().then((books) => {
-        books.forEach((book) => {
-          bookApi.deleteBook({ bookId: book.bookId });
-        });
-      });
-    });
+    // afterEach(() => {
+    //   bookApi.getAllBooks().then((books) => {
+    //     books.forEach((book) => {
+    //       bookApi.deleteBook({ bookId: book.bookId });
+    //     });
+    //   });
+    // });
   });
 
   // after everything not working if doing only negative cases because

@@ -41,7 +41,7 @@ describe("Add book proccess with UI testing", () => {
       });
     });
 
-    it.only("Title is empty", () => {
+    it("Title is empty", () => {
       myReading.fillAddBook({
         bookName: bookData.bookForDeletion,
         success: false,
