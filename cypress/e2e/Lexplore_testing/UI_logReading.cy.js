@@ -69,6 +69,8 @@ describe("Log reading processes", () => {
     });
 
     it.only("Start page is 0", () => {
+      let something;
+      console.log(something);
       myReading.newLogReadingActivity({
         startPage: activity.readingActivityData.zero_page,
         endPage: activity.readingActivityData.five_page,
